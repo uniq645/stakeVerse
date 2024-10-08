@@ -1,0 +1,567 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Cryptocurrency Withdrawal</title>
+    <style>
+:root {
+  --primary-color: #38bdf8;
+  --bg-color: #0f172a;
+  --container-bg: #1e293b;
+  --text-color: #f1f5f9;
+  --label-color: #cbd5e1;
+  --input-bg: #334155;
+  --border-color: #475569;
+}
+
+body {
+  font-family: 'Inter', 'Segoe UI', sans-serif;
+  background-color: var(--bg-color);
+  color: var(--text-color);
+  margin: 0;
+  padding: 0;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  min-height: 100vh;
+  font-size: 12px;
+}
+
+.container {
+  
+  background-color: var(--bg-color);
+  padding: 1rem;
+  width: 95%;
+  max-width: 350px;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+}
+
+h1 {
+  color: var(--primary-color);
+  font-size: 1.2rem;
+  font-weight: 700;
+  margin: 0 0 0.5rem;
+}
+
+label {
+  display: block;
+  margin-top: 0.5rem;
+  margin-bottom: 0.25rem;
+  color: var(--label-color);
+  font-weight: 500;
+  font-size: 0.8rem;
+}
+
+select, input[type="text"], input[type="number"] {
+  width: 100%;
+  padding: 0.5rem;
+  border: 1px solid var(--border-color);
+  border-radius: 6px;
+  background-color: var(--input-bg);
+  color: var(--text-color);
+  margin-bottom: 0.5rem;
+  font-size: 0.9rem;
+}
+
+button {
+  background-color: var(--primary-color);
+  color: var(--bg-color);
+  border: none;
+  padding: 0.5rem 1rem;
+  border-radius: 6px;
+  cursor: pointer;
+  transition: background-color 0.3s;
+  font-weight: 600;
+  font-size: 0.9rem;
+}
+
+.message {
+  background-color: var(--input-bg);
+  border-left: 3px solid var(--primary-color);
+  padding: 0.5rem;
+  margin-bottom: 0.75rem;
+  border-radius: 0 6px 6px 0;
+  font-size: 0.8rem;
+}
+
+.amount-section {
+  display: flex;
+  align-items: center;
+  margin-bottom: 0.5rem;
+}
+
+.amount-input {
+  flex-grow: 1;
+  margin-right: 0.5rem;
+}
+
+.max-button {
+  background-color: var(--border-color);
+  color: var(--primary-color);
+  padding: 0.5rem 0.75rem;
+  font-size: 0.8rem;
+}
+
+.fee-section, .converted-amount, .available-balance {
+  font-size: 0.8rem;
+  color: var(--label-color);
+  margin-bottom: 0.5rem;
+}
+
+.converted-amount {
+  background-color: var(--input-bg);
+  padding: 0.5rem;
+  border-radius: 6px;
+  text-align: center;
+  font-weight: 600;
+}
+
+.withdraw-button {
+  width: 100%;
+  padding: 0.75rem;
+  font-size: 1rem;
+}
+
+.address-section {
+  display: flex;
+  gap: 0.5rem;
+}
+
+.address-input {
+  flex-grow: 1;
+  margin-right: 20px;
+}
+
+.memo-input {
+  flex-basis: 30%;
+  display: none;
+}
+
+@media (min-width: 768px) {
+  body {
+    font-size: 16px;
+  }
+
+  .container {
+    padding: 2rem;
+    max-width: 500px;
+  }
+
+  h1 {
+    font-size: 1.8rem;
+  }
+
+  label {
+    font-size: 1rem;
+    margin-top: 1rem;
+    margin-bottom: 0.5rem;
+  }
+
+  select, input[type="text"], input[type="number"] {
+    padding: 0.75rem;
+    font-size: 1rem;
+    margin-bottom: 1rem;
+  }
+
+  button {
+    padding: 0.75rem 1.5rem;
+    font-size: 1rem;
+  }
+
+  .message {
+    padding: 1rem;
+    margin-bottom: 1.5rem;
+    font-size: 1rem;
+  }
+
+  .fee-section, .converted-amount, .available-balance {
+    font-size: 0.9rem;
+    margin-bottom: 1rem;
+  }
+
+  .converted-amount {
+    padding: 0.75rem;
+  }
+
+  .withdraw-button {
+    padding: 1rem;
+    font-size: 1.1rem;
+  }
+}
+.withdrawal-icon {
+  width: 24px;
+  height: 24px;
+  stroke: #1271ff;
+  stroke-width: 2;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+  fill: none;
+  transition: all 0.3s ease;
+}
+
+/* Adjust size for larger screens */
+@media (min-width: 768px) {
+  .withdrawal-icon {
+    width: 32px;
+    height: 32px;
+  }}
+
+</style>
+</head>
+<body>
+   
+    <div class="container">
+        <h1>
+        <span class="header">
+            <svg class="withdrawal-icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="min-width: 20px; min-height: 20px;">
+                <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/>
+                <polyline points="17 8 12 3 7 8"/>
+                <line x1="12" y1="3" x2="12" y2="15"/>
+            </svg>      Withdrawal Request</h1>
+        </span>
+        <form id="withdrawalForm">
+            <label for="cryptocurrency">Select Cryptocurrency:</label>
+            <select id="cryptocurrency" required onchange="ranInfo();">
+                <option value="USDT">USDT</option>
+                <option value="TON">TON</option>
+                <option value="LTC">LTC</option>
+                <option value="ATOM">ATOM (Cosmos)</option>
+            </select>
+
+            <div class="message">
+                <p><strong>Withdraw through blockchain</strong></p>
+                <p id="info">Please be patient as it can take up to 10 minutes for the withdrawal to be processed.</p>
+            </div>
+
+            <div class="address-section">
+                <div class="address-input">
+                    <label for="walletAddress">Wallet Address:</label>
+                    <input type="text" id="walletAddress" placeholder="Paste your crypto address here" required>
+                </div>
+                <div class="memo-input" id="memoInputContainer">
+                    <label for="memo">Memo:</label>
+                    <input type="text" id="memo" placeholder="Enter memo">
+                </div>
+            </div>
+            <button type="button" id="save" onclick="saveAsDefault()">Save as Default Settings</button>
+            <div id="saveMessage">Settings saved successfully!</div>
+            <span class="available-balance">Available: <span id="availableBalance">1000</span> USDT</span>
+            <label for="withdrawalAmount">Withdrawal Amount (USDT):</label>
+            <div class="amount-section">
+                <input type="number" id="withdrawalAmount" class="amount-input" placeholder="Enter amount in USDT" required>
+                <button type="button" class="max-button" onclick="setMaxAmount()">MAX</button>
+            </div>
+
+            <div class="fee-section">
+                Fee: 0.01 USDT
+            </div>
+
+            <div class="converted-amount" id="convertedAmount"></div>
+
+            <button type="submit" class="withdraw-button">Withdraw</button>
+        </form>
+     </div>
+    <script>
+        let accBalance=0;
+        // Replace with actual balance
+        const rbalance = document.getElementById("withdrawalAmount");
+        const address = document.getElementById("walletAddress");
+        const memo = document.getElementById("memo");
+        const selCurrency = document.getElementById("cryptocurrency");
+        const info = document.getElementById("info");
+        const save = document.getElementById("save");
+        
+        var uname;
+
+        
+        const randomNumber = Math.random();
+        function ranInfo(){
+        if(selCurrency.value =="USDT"){
+            info.textContent = ` Supported networks: TRC20 and BSC(BEP 20) for USDT
+            Check your exchange(Binance etc) or crypto wallet for correct address. `
+        }else {
+            if (randomNumber < 0.4) {
+info.innerHTML = `Our Swap feature is coming soon. You will be able to withdraw via any cryptocurrency or token`; 
+} else if (randomNumber > 0.5) {
+    info.innerHTML = `Please be patient as it can take up to 10 minutes for the withdrawal to be processed.`;}
+}}
+
+const WEBAPP_URL = 'https://script.google.com/macros/s/AKfycbymvjCJEg2nEADZUVJeRHeNZT0ZfuXs_QnlFfJi8tZcsBAztiwXJ0Mm7kLGxy9bta4/exec'; // Replace with your Google Apps Script Web App URL
+
+        async function makeRequest(data) {
+            let final;
+            try {
+                const response = await fetch(WEBAPP_URL, {
+                    method: 'POST',
+                    mode: 'cors',
+                    headers: {
+                        'Content-Type': 'application/x-www-form-urlencoded',
+                    },
+                    body: new URLSearchParams(data),
+                });
+
+                if (!response.ok) {
+                    throw new Error(`HTTP error! status: ${response.status}`);
+                }
+
+                const result = await response.json();
+                final = result;
+
+                
+            } catch (error) {
+                console.error('Error:', error);
+                final = "'Error: ' + error.message";
+
+            }
+            return final;
+        }
+  
+
+
+
+        function setMaxAmount() {
+            document.getElementById('withdrawalAmount').value = accBalance;
+            updateConvertedAmount();
+        }
+        function generateTransId() {
+            return crypto.randomUUID().slice(10,18);
+        }
+
+        document.getElementById('withdrawalForm').addEventListener('submit', function(e) {
+            e.preventDefault();
+            // Add withdrawal logic here
+            if(rbalance.value <= availableBalance){
+                accBalance -= rbalance.value;
+                //updates accBalance and log withdrawal request to trans
+                makeRequest({
+        action: 'update',
+        sheet: "Portforlio",
+        condition: JSON.stringify({column: "UserID", value: uname}),
+        updateValues: JSON.stringify({column: "Account", value: accBalance})
+    });
+                let strData = String(uname+","+generateTransId()+","+rbalance.value+","+selCurrency.value+","+"Queued"+","+"Proccessing"+","+address.textContent+","+memo.textcontent);
+                        values = strData.split(",");
+                        //log to trans table
+                        makeRequest({
+                            action: 'append',
+                            sheet: "Cashout",
+                            values: JSON.stringify(values)
+                         });
+                    alert('Withdrawal request submitted!');
+            }else
+            {alert("Amount requested is greater than available balance!")}
+
+        });
+
+        document.getElementById('cryptocurrency').addEventListener('change', function() {
+            updateConvertedAmount();
+            toggleMemoField();
+        });
+        document.getElementById('withdrawalAmount').addEventListener('input', updateConvertedAmount);
+
+        function toggleMemoField() {
+            const currency = document.getElementById('cryptocurrency').value;
+            const memoInputContainer = document.getElementById('memoInputContainer');
+            if (currency === 'TON') {
+                memoInputContainer.style.display = 'block';
+            } else {
+                memoInputContainer.style.display = 'none';
+            }
+        }
+
+        async function updateConvertedAmount() {
+            const amount = document.getElementById('withdrawalAmount').value;
+            const currency = document.getElementById('cryptocurrency').value;
+            const convertedAmountElement = document.getElementById('convertedAmount');
+
+            if (amount) {
+                try {
+                    let rate;
+                    if (currency === 'USDT') {
+                        rate = 1; // 1 USDT = 1 USDT
+                    } else {
+                        const response = await fetch(`https://api.coingecko.com/api/v3/simple/price?ids=${getCoinGeckoId(currency)}&vs_currencies=usd`);
+                        const data = await response.json();
+                        rate = 1 / data[getCoinGeckoId(currency)].usd; // Inverse rate for USDT to other currency
+                    }
+                    const convertedAmount = amount * rate;
+                    convertedAmountElement.textContent = `You will receive: ${formatCryptoAmount(convertedAmount)} ${currency}`;
+                } catch (error) {
+                    console.error('Error fetching conversion rate:', error);
+                    convertedAmountElement.textContent = 'Error fetching conversion rate';
+                }
+            } else {
+                convertedAmountElement.textContent = '';
+            }
+        }
+
+        function getCoinGeckoId(currency) {
+            switch (currency) {
+                case 'TON':
+                    return 'the-open-network';
+                case 'LTC':
+                    return 'litecoin';
+                case 'ATOM':
+                    return 'cosmos';
+                default:
+                    return currency.toLowerCase();
+            }
+        }
+
+        function formatCryptoAmount(amount) {
+            if (amount >= 1) {
+                return amount.toFixed(2);
+            } else {
+                return amount.toFixed(6);
+            }
+        }
+
+
+        async function handleSet(){
+    try {
+        let query = `WHERE UserID = '${uname}'`;
+        let response = await makeRequest({
+          action: 'query',
+          sheet: 'Settings',
+          query: query
+        });
+      console.log(response);
+    
+      if(response == "Error"){console.error("Errow within making request")}
+
+      if(response.status === 'success' && Array.isArray(response.data)) {
+        let infor = response.data[1];
+        if(infor[2].toString() != ""){
+            //found 
+            save.textContent = "Change Address";
+            console.log("found");
+            address.textContent = infor[2];
+            address.setAttribute("placeholder", infor[2]);
+            console.log(address.textContent)
+            memo.textContent = infor[3];
+            memo.setAttribute("placeholder", infor[3]);
+
+            selCurrency.value = infor[4];
+            //set input elements as read oonly
+            address.setAttribute("readonly",true);
+            memo.setAttribute("readonly",true);
+            selCurrency.setAttribute("disabled",true);
+            
+        }
+      
+        } 
+        else{
+          throw new Error('Unexpected data format from server') }    
+        }
+        catch (error) {
+        console.error(error);
+        alert('Unexpected error occurred. Please try again.');
+      }
+  }
+
+        async function handlePort(){
+    try {
+        let query = `WHERE UserID = '${uname}'`;
+        let response = await makeRequest({
+          action: 'query',
+          sheet: 'Portforlio',
+          query: query
+        });
+
+      console.log(response);
+    
+      if(response == "Error"){console.error("Errow within making request")}
+
+      if(response.status === 'success' && Array.isArray(response.data)) {
+        let info = response.data[1];
+        accBalance = info[7];
+        document.getElementById('availableBalance').textContent = accBalance;
+        } 
+        else{
+          throw new Error('Unexpected data format from server') }    
+        }
+        catch (error) {
+        console.error(error);
+        alert('Unexpected error occurred. Please try again.');
+      }
+  }
+
+
+window.onload = function() {
+    const urlParams = new URLSearchParams(window.location.search);
+    const username = urlParams.get('username');
+    
+    if (username) {
+        // Decode the username to handle special characters
+        const decodedUsername = decodeURIComponent(username);
+        uname = decodedUsername;
+        console.log( `Hello, ${decodedUsername}!`);
+            address.textContent="";
+            memo.textContent="";
+            handlePort();
+            setTimeout(handleSet,1000);
+
+        const encodedUsername = encodeURIComponent(uname);
+        var extension = `?username=${encodedUsername}`;
+        navItems.forEach(nav => {   
+            let url = nav.getAttribute('href');
+            let extURL = url + extension;
+            nav.setAttribute("href", extURL);
+        });
+    } else {
+        console.log('No user found. Please sign up.');
+        window.location.href = `signup.html`;
+    }
+}
+
+
+        // Initial call to set up the form correctly
+        toggleMemoField();
+           
+        function updateData(updCol,updVal) {
+makeRequest({
+    action: 'update',
+    sheet: "Settings",
+    condition: JSON.stringify({column: "UserID", value: uname}),
+    updateValues: JSON.stringify({column: updCol, value: updVal})
+});
+}
+const saveMessage = document.getElementById('saveMessage');
+saveMessage.style.display = 'none';
+
+        function saveAsDefault() {
+
+            if (save.textContent ==  "Change Address")
+            {
+                //remove read only
+                address.removeAttribute("readonly");
+                memo.removeAttribute("readonly");
+                selCurrency.removeAttribute("disabled");
+                save.textContent = "Set Default Address";
+                address.setAttribute("placeholder", "Enter your wallet address");
+                memo.setAttribute("placeholder", "");
+            }
+            else {
+                let add = address.value;
+                let mem = memo.value;
+                let net = selCurrency.value;
+                //console.log(add);
+                updateData("Address",add);
+                updateData("Memo",mem);
+                updateData("Network",net);
+                // Show save message
+            const saveMessage = document.getElementById('saveMessage');
+            saveMessage.style.display = 'block';
+            setTimeout(() => {
+                saveMessage.style.display = 'none';
+                }, 3000);
+                save.textContent = "Change Address";
+            //reload
+            }
+
+     
+        }
+    </script>
+</body>
+</html>

@@ -1,0 +1,737 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dashboard</title>
+    <link href='https://fonts.googleapis.com/css?family=Poppins' rel='stylesheet'>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <script src="./js/home.js"></script>
+    <style>
+    @import url('https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700&family=Roboto:wght@300;400;700&display=swap');
+       :root {
+    --lgrey: #2c2f33;
+    --wgrey: #454f55;
+    --dngrey: #0A0E14;
+    --mwrite: #c7c9cb;
+    --lblue: #3770eb;
+    --ayell: #ff8412;
+    --white: #ffffff;
+    --blue: #1a1d23;
+}
+
+        body {
+            font-family: 'Poppins';
+            margin: 0;
+            padding: 0;
+            background-color: #0A0E14;
+            color: var(--white);
+        }
+
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+
+        h1 {
+            text-align: center;
+            color: #ffffff;
+        }
+        h2 {
+            text-align: center;
+            color: #f87c17;
+        }
+
+        .card-container {
+            display: flex;
+            gap: 30px;
+            margin-bottom: 20px;
+        }
+
+.wallet-box, .card a {
+  text-decoration: none;
+  color: inherit;
+}
+
+.card a:hover {
+  text-decoration: none;
+}
+
+        
+        .card {
+            background-color: #0A0E14;
+            border-radius: 15px;
+            padding: 15px;
+            width: calc(50% - 10px);
+            border-bottom: 2px solid #FF8C00; /* Orange underline */
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.5); /* Adds depth */
+        }
+
+        .card h2 {
+            margin-top: 0;
+            font-size: 0.8rem;
+            font-family: 'Orbitron'
+        }
+
+        .card p {
+            font-family: Arial, Helvetica, sans-serif;
+            font-size: 12px;
+            font-weight: bold;
+            margin-bottom: 5;
+            text-align: center;
+        }
+
+        .league-wallet {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+        }
+
+        .wallet-box {
+            background: #0A0E14;
+            border-radius: 15px;
+            padding: 9px;
+            display: flex;
+            align-items: center;
+        }
+
+        .wallet-icon {
+           font-size: 24px;
+            margin-right: 10px;
+        }
+
+        .wallet-icon img {
+            width: 30px;
+            height:30px;
+        }
+
+        .slider-container {
+            position: relative;
+            width:80%;
+            height: 500px;
+            overflow: hidden;
+            margin-bottom: 10px;
+        }
+
+        .slider {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+}
+
+@media (max-width: 768px) {
+  .slide {
+    flex-basis: 90%; /* adjust to desired mobile width */
+    margin: 10px 0;
+  }
+  .slider-container {
+    position: relative;
+    width: 100%;
+    height: 300px;
+}
+}
+
+        .slide {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            opacity: 0;
+            transition: opacity 0.5s ease-in-out;
+        }
+
+        .slide.active {
+            opacity: 1;
+        }
+
+        .slide img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover scale-down;
+        }
+
+        @media (max-width: 768px) {
+            .card, .plan-card {
+                width: 100%;
+            }
+        }
+
+@keyframes dash {
+  0% {
+    stroke-dashoffset: 250;
+  }
+  100% {
+    stroke-dashoffset: 0;
+  }
+}
+
+@keyframes fade-in {
+  0% {
+    opacity: 0;
+  }
+  100% {
+    opacity: 1;
+  }
+}
+
+.animation-text {
+  font-size: 18px;
+  font-weight: bold;
+  color: #6d4be6;
+  animation: fade-in-text 2s ease-out;
+}
+
+@keyframes fade-in-text {
+  0% {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+  100% {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+#start {
+  background-color: #F7B500; /* Binance orange */
+  color: #000000;
+  border: none;
+  width:100%;
+  padding: 12px 24px;
+  font-size: 16px;
+  font-weight: bold;
+  border-radius: 10px;
+  cursor: pointer;
+  transition: background-color 0.3s;
+  box-shadow: 0 0 10px rgba(247, 181, 0, 0.5);
+  font-family: 'Montserrat', sans-serif; /* Binance font */
+  text-transform: uppercase;
+  letter-spacing: 1px;
+}
+
+.navbar {
+            position: fixed;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            background: linear-gradient(135deg, #111, #000);
+            padding: 10px 0;
+            display: flex;
+            justify-content: space-around;
+            align-items: center;
+            box-shadow: 0 -2px 10px rgba(0, 0, 0, 0.5);
+            z-index: 1000;
+        }
+
+        .nav-item {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            text-decoration: none;
+            color: #555;
+            transition: all 0.3s ease;
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+            position: relative;
+        }
+
+        .nav-item:hover, .nav-item.active {
+            color: #00f5d4;
+            transform: translateY(-5px);
+        }
+
+        .nav-item svg {
+            width: 24px;
+            height: 24px;
+            fill: currentColor;
+        }
+
+        .glow {
+            position: absolute;
+            width: 40px;
+            height: 3px;
+            background: linear-gradient(90deg, transparent, #00f5d4, transparent);
+            bottom: -5px;
+            transition: all 0.3s ease;
+            border-radius: 3px;
+        }
+
+        
+        .faq-button {
+            background: linear-gradient(135deg, #4a00e0, #8e2de2);
+            color: white;
+            border: none;
+            padding: 12px 24px;
+            font-size: 16px;
+            border-radius: 50px;
+            cursor: pointer;
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+        }
+
+        .faq-button:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 20px rgba(142, 45, 226, 0.4);
+        }
+
+        .faq-modal {
+            position: fixed;
+            top: 0;
+            right: -100%;
+            width: 100%;
+            height: 100%;
+            background-color: #252538;
+            transition: right 0.5s ease;
+            display: flex;
+            flex-direction: column;
+            z-index: 500;
+        }
+
+        .faq-modal.active {
+            right: 0;
+        }
+
+        .faq-iframe {
+            flex-grow: 1;
+            border: none;
+            width: 100%;
+        }
+
+        .exit-faq {
+            background: linear-gradient(135deg, #ff4757, #ff6b81);
+            color: white;
+            border: none;
+            padding: 12px 24px;
+            font-size: 16px;
+            border-radius: 50px;
+            cursor: pointer;
+            align-self: flex-end;
+            margin: 20px;
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+        }
+
+        .exit-faq:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 20px rgba(255, 71, 87, 0.4);
+        }
+
+        @media (min-width: 768px) {
+            .faq-modal {
+                width: 50%;
+            }
+        }
+
+    .quiz-prompt {
+        background-color: #1a1a2e;
+        color: #e0e0e0;
+        padding: 2rem;
+        border-radius: 15px;
+        text-align: center;
+        max-width: 600px;
+        margin: 2rem auto;
+        box-shadow: 0 0 20px rgba(142, 45, 226, 0.4);
+    }
+
+    .quiz-prompt h2 {
+        color: #8e2de2;
+        margin-bottom: 1rem;
+    }
+
+    .cta-button {
+        background-color: #8e2de2;
+        color: #ffffff;
+        border: none;
+        padding: 0.8rem 1.5rem;
+        font-size: 1rem;
+        border-radius: 5px;
+        cursor: pointer;
+        transition: background-color 0.3s ease;
+    }
+
+    .cta-button:hover {
+        background-color: #7718c2;
+    }
+
+    .overlay {
+        display: none;
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background-color: rgba(0, 0, 0, 0.8);
+        z-index: 1000;
+    }
+
+    .overlay-content {
+        position: relative;
+        width: 90%;
+        height: 90%;
+        max-width: 1200px;
+        margin: 2% auto;
+        background-color: #0f0f23;
+        border-radius: 15px;
+        overflow: hidden;
+    }
+
+    .back {
+        position: absolute;
+        top: 10px;
+        left: 10px;
+        background-color: #8e2de2;
+        color: #ffffff;
+        border: none;
+        padding: 0.5rem 1rem;
+        font-size: 1rem;
+        border-radius: 5px;
+        cursor: pointer;
+        z-index: 10;
+    }
+
+    #quizFrame {
+        width: 100%;
+        height: 100%;
+        border: none;
+    }
+
+    @media (max-width: 768px) {
+        .overlay-content {
+            width: 95%;
+            height: 95%;
+            margin: 2.5% auto;
+        }
+    }
+
+    #typing-container {
+    font-family: 'Poppins', sans-serif;
+    font-size: 1.5rem;
+    color: #d9e3e6;
+    background-color: #030303;
+    padding: 20px;
+    border-radius: 10px;
+    text-align: center;
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.5), 0 2px 10px rgba(0, 0, 0, 0.5);
+    position: relative;
+    overflow: hidden;
+    margin-bottom: 20px;
+}
+
+#typing-container::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(135deg, rgba(255, 255, 255, 0.1), rgba(0, 0, 0, 0) 70%);
+    pointer-events: none;
+    z-index: 0;
+}
+
+#typed-text {
+    position: relative;
+    z-index: 1; /* Ensure text is above the gradient */
+}
+
+#cursor {
+    animation: blink 0.7s step-end infinite;
+    position: relative;
+    z-index: 1; /* Ensure cursor is above the gradient */
+}
+
+@keyframes blink {
+    50% { opacity: 0; }
+}
+    /* Mobile Optimization */
+    @media (max-width: 768px) {
+        #typing-container {
+            font-size: 1.2rem; /* Smaller font size for mobile */
+            padding: 15px; /* Reduced padding */
+        }
+    }
+
+    @media (max-width: 480px) {
+        #typing-container {
+            font-size: 1rem; /* Even smaller font size for very small screens */
+            padding: 10px; /* Further reduced padding */
+            margin: 10px; /* Adjust margin for small screens */
+        }}
+    </style>
+      <link rel="stylesheet" href="./css/home.css">
+</head>
+<body>
+</nav>
+    <div class="container">
+        <div class="card-container">
+            <div class="card">
+                <a href="./Earnings.html"><h2>Profit Rate</h2>
+                <p><span id="pph">0.005</span>  USDT / Hour</p></a>
+            </div>
+            <div class="card">
+                <a href="./loyalty.html"><h2>Loyal Points</h2>
+                <p><span id="loyal">1,250</span></p></a>
+            </div>
+        </div>      
+        <div class="league-wallet">
+            <a href="./Account.html" class="wallet-box">
+                <span class="wallet-icon"><img src="./assets/wallet.png" alt="wallet"></span>
+                <span>Wallet</span>
+            </a>
+            <button class="faq-button" id="faqButton">FAQ</button>
+
+            <div class="faq-modal" id="faqModal">
+                <button class="exit-faq" id="exitFaq">Exit FAQ</button>
+                <iframe class="faq-iframe" id="faqIframe" src="about:blank"></iframe>
+            </div>
+        </div>
+        <div id="typing-container">
+            <span id="typed-text"></span>
+            <span id="cursor">|</span>
+        </div>
+        <div class="slider-container">
+            <div class="slider">
+                <div class="slide active">
+                    <img src="./assets/_unoptim/duobanner.png" alt="Slide 1">
+                </div>
+                <div class="slide">
+                    <img src="./assets/_unoptim/ad1.png" alt="Slide 2">
+                </div>
+                <div class="slide">
+                    <img src="./assets/_unoptim/apex.png" alt="Slide 3">
+                </div>
+            </div>
+        </div>
+    
+        <div class="sliding-window" id="slidingWindow">
+        <a href="#sNorm"><button class="close-button" id="closeWindow">&times;</button></a>
+        <div class="sliding-window-content">
+            <h2>Staking Timeline</h2>
+            <div class="timeline" id="timeline">
+                <!-- Timeline boxes will be dynamically added here -->
+            </div>
+            <div class="estimator"> 
+                <label for="stakingAmount">Staking Amount:</label>
+                <input type="number" id="stakingAmount" placeholder="Enter amount">   
+            </div>
+            <div class="amount-boxes">
+                <div class="amount-box" data-amount="50">$50</div>
+                <div class="amount-box" data-amount="120">$120</div>
+                <div class="amount-box" data-amount="250">$250</div>
+                <div class="amount-box" data-amount="500">$500</div>
+            </div>
+            <div style="height: 30px;font-size: small;" id="result">RESULT</div>
+            <span><button type="button" id="start" onclick="stakeNow();">Start Earning</button></span>
+        </div></div>
+    </div>
+    <h2><i class="fas fa-layer-group"></i> Staking Products</h2>
+        <section class="container">
+            <div class="products">
+                <div class="product-card">
+                    <div class="product-image" style="background-image: url(./assets/duo.jpeg)"></div>
+                    <div class="product-info">
+                        <h3>Stable Duo</h3>
+                        <p>Combines the best of both worlds: the stability of USDT 
+                            and the growth potential of Ethereum 2.0. Whether you're looking for a secure 
+                            way to earn passive income or want to take advantage of Ethereum's future, 
+                            this staking plan is designed for both cautious investors and crypto enthusiasts.
+                        </p>
+                        <p class="apy">APY: 210%</p>
+                        <a href="#" class="stake-button" onclick="selector = 1;showSliding(selector)">Stake Now</a>
+                    </div>
+                </div>
+                <div id="sNorm" class="product-card">
+                    <div class="product-image" style="background-image: url('./assets/leg1.png')"></div>
+                    <div class="product-info">
+                        <h3>Legacy Staking</h3>
+                        <p>Diversify your portfolio by staking on some of the most innovative blockchain platforms: 
+                            Cardano (ADA), Polkadot (DOT), and Solana (SOL).  Enjoy a mix of stability, scalability, and speed—while earning competitive rewards.
+                            Suitable for delagators who want sustainable rewards at conservative risk.
+                        </p>
+                        <p class="apy">APY: 300%</p>
+                        <a href="#" class="stake-button" onclick="selector = 2;showSliding(selector)">Stake Now</a>
+                    </div>
+                </div>
+                <div class="product-card">
+                    <div class="product-image" style="background-image: url('./assets/memecon.png')"></div>
+                    <div class="product-info">
+                        <h3>Apex Pro</h3>
+                        <p>Stake high-volatility, high-reward meme coins like Pepe Unchained. Gain 
+                            explosive growths on your assets thriving on quick market movements. 
+                            Designed for the bold, offering the highest potential returns—but with the highest risk.
+                            Only stake what you're willing to lose.
+                         </p>
+                        <p class="apy">APY: 550%</p>
+                        <a href="#" class="stake-button" onclick="selector = 3;showSliding(selector)">Stake Now</a>
+                    </div>
+                </div>
+            </div>
+        </section>
+        <section class="quiz-prompt">
+            <h2>Discover Your Ideal Staking Strategy</h2>
+            <p>Take our quick Staking Quiz to find the best staking product for your needs!</p>
+            <button id="openQuizBtn" class="cta-button">Start Quiz</button>
+        </section>
+        
+        <div id="quizOverlay" class="overlay">
+            <div class="overlay-content">
+                <button class="back">&larr; Back</button>
+                <iframe id="quizFrame" src="about:blank" frameborder="0"></iframe>
+            </div>
+        </div>
+            <nav class="navbar">
+                <a href="home.html" class="nav-item active" data-index="0">
+                    <svg viewBox="0 0 24 24"><path d="M3 13h1v7c0 1.103.897 2 2 2h12c1.103 0 2-.897 2-2v-7h1a1 1 0 0 0 .707-1.707l-9-9a.999.999 0 0 0-1.414 0l-9 9A1 1 0 0 0 3 13zm9-8.586 6 6V15l.001 5H6v-9.586l6-6z"/><path d="M12 18c3.703 0 4.901-3.539 4.95-3.689l-1.9-.621c-.008.023-.781 2.31-3.05 2.31-2.238 0-3.02-2.221-3.051-2.316l-1.899.627C7.099 14.461 8.297 18 12 18z"/></svg>
+                </a>
+                <a href="./Earnings.html" class="nav-item" data-index="1">
+                    <svg viewBox="0 0 24 24"><path d="M12 6C7.03 6 2 7.546 2 10.5v4C2 17.454 7.03 19 12 19s10-1.546 10-4.5v-4C22 7.546 16.97 6 12 6zm-8 8.5v-1.197a9.989 9.989 0 0 0 2 .86v1.881c-1.312-.514-2-1.126-2-1.544zm12 2.914v-1.96c2.446-.124 4-.66 4-1.454v-1.197a9.989 9.989 0 0 0 2 .86v1.881c0 1.19-2.638 1.989-6 1.87zm-6-4.72c-3.14 0-6-1.033-6-1.694 0-.661 2.86-1.694 6-1.694s6 1.033 6 1.694c0 .661-2.86 1.694-6 1.694z"/></svg>
+                </a>
+                <a href="./neotask.html" class="nav-item" data-index="2">
+                    <svg viewBox="0 0 24 24"><path d="M22 5.18 10.59 16.6l-4.24-4.24 1.41-1.41 2.83 2.83 10-10L22 5.18zM12 20c-4.41 0-8-3.59-8-8s3.59-8 8-8c1.57 0 3.04.46 4.28 1.25l1.44-1.44C16.1 2.67 14.13 2 12 2 6.48 2 2 6.48 2 12s4.48 10 10 10c1.73 0 3.36-.44 4.78-1.22l-1.5-1.5c-1 .46-2.11.72-3.28.72zm7-5h-3v2h3v3h2v-3h3v-2h-3v-3h-2v3z"/></svg>
+                </a>
+                <a href="./refferal.html" class="nav-item" data-index="3">
+                    <svg viewBox="0 0 24 24"><path d="M16 11c1.66 0 2.99-1.34 2.99-3S17.66 5 16 5c-1.66 0-3 1.34-3 3s1.34 3 3 3zm-8 0c1.66 0 2.99-1.34 2.99-3S9.66 5 8 5C6.34 5 5 6.34 5 8s1.34 3 3 3zm0 2c-2.33 0-7 1.17-7 3.5V19h14v-2.5c0-2.33-4.67-3.5-7-3.5zm8 0c-.29 0-.62.02-.97.05 1.16.84 1.97 1.97 1.97 3.45V19h6v-2.5c0-2.33-4.67-3.5-7-3.5z"/></svg>
+                </a>
+                <a href="./Account.html" class="nav-item" data-index="4">
+                    <svg viewBox="0 0 24 24"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm0 3c1.66 0 3 1.34 3 3s-1.34 3-3 3-3-1.34-3-3 1.34-3 3-3zm0 14.2c-2.5 0-4.71-1.28-6-3.22.03-1.99 4-3.08 6-3.08 1.99 0 5.97 1.09 6 3.08-1.29 1.94-3.5 3.22-6 3.22z"/></svg>
+                </a>
+                <a href="./games.html" class="nav-item" data-index="5">
+                    <svg viewBox="0 0 24 24"><path d="M21 6H3c-1.1 0-2 .9-2 2v8c0 1.1.9 2 2 2h18c1.1 0 2-.9 2-2V8c0-1.1-.9-2-2-2zm-10 7H8v3H6v-3H3v-2h3V8h2v3h3v2zm4.5 2c-.83 0-1.5-.67-1.5-1.5s.67-1.5 1.5-1.5 1.5.67 1.5 1.5-.67 1.5-1.5 1.5zm4-3c-.83 0-1.5-.67-1.5-1.5S18.67 9 19.5 9s1.5.67 1.5 1.5-.67 1.5-1.5 1.5z"/></svg>
+                </a>
+                <div class="glow"></div>
+            </nav>
+            <div class="site-footer" style="font-size: smaller;">
+                <hr />
+                <div class="footer-container">
+                  <div class="footer-left" style="font-size: 11px;">
+                    <p>&copy; 2024 StakeVerse [2.1]
+                    <p>All rights reserved</p>
+                  </div>
+                  <div class="footer-right" style="font-size: 12px;">
+                    <p>StakeVerse: Bridging Traditional Staking & Web3</p>
+                  </div>
+                </div>
+                <div class="footer-bottom">
+                  <ul>
+                    <li><a href="#" onclick="openModal(0)">Terms & Conditions</a></li>
+                    <li><a href="#" onclick="openModal(1)">Privacy Policy</a></li>
+                  </ul>
+                </div>
+              </div>       
+    </div>
+
+    <script>
+    const dailyLoginAnimation = document.querySelector('.daily-login-animation');
+    const pph = document.getElementById("pph");
+    const loyal = document.getElementById("loyal");
+
+    const navItems = document.querySelectorAll('.nav-item');
+    const glow = document.querySelector('.glow');
+
+    const text = "Welcome to StakeVerse! Your gateway to simplified, high-yield staking.";
+    let index = 0;
+    let textArray = [text, "All Our Staking Products are Flexible","You're just one step away from achieving passive income!","Let your idle assets work for you!"];
+    const randomIndex = Math.floor(Math.random() * textArray.length); 
+    function typeText() {
+        if (index < textArray[randomIndex].length) {
+            document.getElementById('typed-text').innerHTML += textArray[randomIndex].charAt(index);
+            index++;
+            setTimeout(typeText, 50); // Adjust typing speed here
+        }
+    }
+    setTimeout(typeText,2000);
+        navItems.forEach(item => {
+            item.addEventListener('click', () => {
+                navItems.forEach(navItem => navItem.classList.remove('active'));
+                item.classList.add('active');
+                const index = item.getAttribute('data-index');
+                glow.style.left = `calc(${index} * (100% / 6) + (100% / 12) - 20px)`;
+            });
+        });
+
+        //sliding faq
+        const faqButton = document.getElementById('faqButton');
+        const faqModal = document.getElementById('faqModal');
+        const exitFaq = document.getElementById('exitFaq');
+        const faqIframe = document.getElementById('faqIframe');
+
+        faqButton.addEventListener('click', () => {
+            faqModal.classList.add('active');
+            // Replace 'your-faq-page-url.html' with the actual URL of your FAQ page
+            faqIframe.src = './about/FAQ.html';
+        });
+
+        function openModal(num){
+            if (num == 0){
+            faqIframe.src = './about/terms.html';
+            }
+            else{
+            faqIframe.src = './about/privacy.html';
+            }
+            faqModal.classList.add('active');
+        }
+
+        exitFaq.addEventListener('click', () => {
+            faqModal.classList.remove('active');
+            faqIframe.src = 'about:blank';
+        });
+
+        //sliding Calculator 
+        const amountBoxes = document.querySelectorAll('.amount-box');
+        const stakingAmountInput = document.getElementById('stakingAmount');
+        stakingAmountInput.addEventListener("focus", ()=>{
+          Estimate();  
+        })
+        stakingAmountInput.addEventListener("keyup",()=>{Estimate();})
+        //above triggers estimate both on focus and typing
+        amountBoxes.forEach(box => {
+            box.addEventListener('click', () => {
+                amountBoxes.forEach(b => b.classList.remove('selected'));
+                box.classList.add('selected');
+                stakingAmountInput.value = box.dataset.amount;
+                stakingAmountInput.focus();
+            });
+        });
+        
+        //quiz overlay
+        document.addEventListener('DOMContentLoaded', function() {
+        const openQuizBtn = document.getElementById('openQuizBtn');
+        const quizOverlay = document.getElementById('quizOverlay');
+        const backBtn = quizOverlay.querySelector('.back');
+        const quizFrame = document.getElementById('quizFrame');
+
+        openQuizBtn.addEventListener('click', function() {
+            quizOverlay.style.display = 'block';
+            quizFrame.src = './mini/quiz.html';
+            document.body.style.overflow = 'hidden';
+        });
+
+        backBtn.addEventListener('click', function() {
+            quizOverlay.style.display = 'none';
+            quizFrame.src = 'about:blank';
+            document.body.style.overflow = 'auto';
+        });
+    });
+
+        // Image slider functionality
+        const slides = document.querySelectorAll('.slide');
+        let currentSlide = 0;
+
+        function showSlide(index) {
+            slides[currentSlide].classList.remove('active');
+            slides[index].classList.add('active');
+            currentSlide = index;
+        }
+
+        function nextSlide() {
+            let next = (currentSlide + 1) % slides.length;
+            showSlide(next);
+        }
+
+        setInterval(nextSlide, 3000); // Change slide every 3 seconds
+    </script>
+</body>
+</html>

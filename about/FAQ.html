@@ -1,0 +1,212 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Staking FAQ</title>
+    <style>
+        :root {
+            --primary-color: #6e41e2;
+            --text-color: #333;
+            --bg-color: #f5f5f7;
+            --modal-bg: rgba(245, 245, 247, 0.95);
+        }
+
+        body {
+            font-family: 'Arial', sans-serif;
+            background-color: #1a1a1a;
+            margin: 0;
+            padding: 0;
+        }
+
+        .faq-modal {
+            display: none;
+            position: fixed;
+            z-index: 1000;
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            overflow: auto;
+            background-color: rgba(0,0,0,0.5);
+        }
+
+        .modal-content {
+            background-color: var(--modal-bg);
+            margin: 5% auto;
+            padding: 40px;
+            border-radius: 15px;
+            width: 80%;
+            max-width: 800px;
+            box-shadow: 0 4px 30px rgba(0, 0, 0, 0.1);
+            backdrop-filter: blur(5px);
+            -webkit-backdrop-filter: blur(5px);
+            margin-bottom: 80px;
+        }
+
+
+        .close {
+            color: var(--text-color);
+            float: right;
+            font-size: 28px;
+            font-weight: bold;
+            cursor: pointer;
+            transition: color 0.3s ease;
+        }
+
+        .close:hover {
+            color: var(--primary-color);
+        }
+
+        h2 {
+            color: var(--primary-color);
+            margin-bottom: 30px;
+            font-size: 28px;
+        }
+
+        .faq-list {
+            list-style-type: none;
+            padding: 0;
+        }
+
+        .faq-item {
+            margin-bottom: 15px;
+            border-bottom: 1px solid rgba(110, 65, 226, 0.2);
+        }
+
+        .faq-question {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 15px 0;
+            cursor: pointer;
+            font-weight: bold;
+            color: var(--text-color);
+            transition: color 0.3s ease;
+        }
+
+        .faq-question:hover {
+            color: var(--primary-color);
+        }
+
+        .faq-question::after {
+            content: '+';
+            font-size: 20px;
+            transition: transform 0.3s ease;
+        }
+
+        .faq-question.active::after {
+            transform: rotate(45deg);
+        }
+
+        .faq-answer {
+            max-height: 0;
+            overflow: hidden;
+            transition: max-height 0.3s ease, padding 0.3s ease;
+            padding: 0 15px;
+            color: var(--text-color);
+            font-size: 14px;
+            line-height: 1.6;
+        }
+
+        .faq-answer.show {
+            max-height: 500px;
+            padding: 15px;
+            background-color: rgba(110, 65, 226, 0.1);
+            border-radius: 5px;
+        }
+
+        /* Responsive design */
+        @media (max-width: 768px) {
+            .modal-content {
+                width: 90%;
+                padding: 20px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- FAQ Modal -->
+    <div id="faqModal" class="faq-modal">
+        <div class="modal-content">
+            <span class="close">&times;</span>
+            <h2>Frequently Asked Questions</h2>
+            <ul class="faq-list">
+                <li class="faq-item">
+                    <div class="faq-question">1. Why should I stake my crypto?</div>
+                    <div class="faq-answer">Staking enables you earn passive income on your assets. By becoming a delagator, you can earn coins by making your crypto holdings available for use on the blockchain.
+                         If you looking for a consistent income flow, then this is for you. Especially if you are just holding idle assets in your portfolio, you can put
+                         them to work, and make profits.</div>
+                </li>
+                <li class="faq-item">
+                    <div class="faq-question">2. How do I start staking?</div>
+                    <div class="faq-answer">To start staking, you need to have the required minimum amount of tokens and choose a validator node. StakeVerse simplifies this for you,
+                         just open an account, connect your crypto, and start earning by choosing your suitable plan. </div>
+                </li>
+                <li class="faq-item">
+                    <div class="faq-question">3. What are the risks of staking?</div>
+                    <div class="faq-answer">While staking is generally considered less risky than trading, there is still always the risk
+                        of volatility. With StakeVerse, this is not a major concern, since we validate multiple assets and use crypto arbitrage.
+                        Above all else, it is essential to take our quiz to assess yourself and know which plan is suitable for you.</div>
+                </li>
+                <li class="faq-item">
+                    <div class="faq-question">4. How are staking rewards calculated?</div>
+                    <div class="faq-answer">Staking rewards are typically calculated based on several factors, 
+                        including the amount staked, the duration of staking, the overall network participation rate.
+                    However, we use a higher yield disbursement approach, where you receive higher rates in your first three month, before 
+                the remaining is spread on the remaining months of the year. Profits are calculated in realtime and gained hourly.</div>
+                </li>
+                <li class="faq-item">
+                    <div class="faq-question">5. Who is a delegator?</div>
+                    <div class="faq-answer">Delegator is an individual(you) that participates in the proof-of-stake(POS) validation process 
+                        of a blockchain network by assigning their tokens or coins to a validator node(us).</div>
+                </li>
+                <li class="faq-item"></li>
+                    <div class="faq-question">6. What is the minimum withdrawal?</div>
+                    <div class="faq-answer">Withdrawals are processed weekly (automated), and daily depending on delegator's request.
+                        Minimum withdrawal is $5, this is set to prevent network congestion and reduce frequency of blockchain transaction fees.
+                    </div>
+                </li>
+                <li class="faq-item"></li>
+                <div class="faq-question">7. What kind of products are available on StakeVerse?</div>
+                <div class="faq-answer">We offer flexible multi-assets staking plans, tailored for everyone. 
+                    StakeVerse is not your traditional staking platform, we utilize crypto arbitrage to increase returns on 
+                    staking, therefore we pride ourselves as high-yield staking platform. We are also offer advertising services
+                    and web 3 games integration. We aspire to become the leading validator network for staking, therefore transparency and
+                    fidelity is our hallmark.
+                </div>
+            </li>
+            </ul>
+        </div>
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const modal = document.getElementById('faqModal');
+            const span = document.getElementsByClassName('close')[0];
+            const questions = document.querySelectorAll('.faq-question');
+
+            window.onload = function() {
+                modal.style.display = 'block';
+            }
+            
+            questions.forEach(question => {
+                question.addEventListener('click', () => {
+                    const answer = question.nextElementSibling;
+                    const isActive = question.classList.contains('active');
+
+                    questions.forEach(q => {
+                        q.classList.remove('active');
+                        q.nextElementSibling.classList.remove('show');
+                    });
+
+                    if (!isActive) {
+                        question.classList.add('active');
+                        answer.classList.add('show');
+                    }
+                });
+            });
+        });
+    </script>
+</body>
+</html>

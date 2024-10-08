@@ -1,0 +1,256 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Web3 Staking Quiz</title>
+    <style>
+        :root {
+            --primary-navy: #0a192f;
+            --secondary-navy: #172a45;
+            --accent-teal: #64ffda;
+            --text-light: #e6f1ff;
+            --text-dark: #8892b0;
+        }
+    
+        body {
+            margin: 0;
+            padding: 0;
+            font-family: 'Arial', sans-serif;
+            background-color: var(--primary-navy);
+            color: var(--text-light);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            overflow-x: hidden;
+        }
+    
+        #quiz-container {
+            position: relative;
+            width: 90%;
+            max-width: 600px;
+            background-color: var(--secondary-navy);
+            border-radius: 15px;
+            padding: 20px;
+            box-shadow: 0 0 20px rgba(100, 255, 218, 0.2);
+            margin: 20px 0;
+        }
+    
+        h1 {
+            color: var(--accent-teal);
+            text-align: center;
+            font-size: 1.8rem;
+            margin-bottom: 15px;
+        }
+    
+        h2 {
+            color: var(--accent-teal);
+            text-align: center;
+            font-size: 1.2rem;
+            margin-bottom: 15px;
+        }
+    
+        .options {
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+            margin-top: 20px;
+        }
+    
+        .option {
+            background: linear-gradient(135deg, var(--secondary-navy), var(--primary-navy));
+            padding: 12px;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+            font-size: 0.9rem;
+            text-align: center;
+            border: 1px solid var(--text-dark);
+        }
+    
+        .option:hover, .option:active {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 20px rgba(100, 255, 218, 0.3);
+            border-color: var(--accent-teal);
+        }
+    
+        #result {
+            text-align: center;
+            margin-top: 20px;
+            font-size: 0.9rem;
+            color: var(--text-dark);
+        }
+    
+        #canvas {
+            position: fixed;
+            top: 0;
+            left: 0;
+            z-index: -1;
+        }
+    
+        @media (max-width: 480px) {
+            #quiz-container {
+                width: 95%;
+                padding: 15px;
+            }
+    
+            h1 {
+                font-size: 1.5rem;
+            }
+    
+            h2 {
+                font-size: 1rem;
+            }
+    
+            .option {
+                padding: 10px;
+                font-size: 0.8rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <canvas id="canvas"></canvas>
+    <div id="quiz-container">
+        <h1>Staking Quiz</h1>
+        <div id="question-container">
+            <h2 id="question"></h2>
+            <div id="options" class="options"></div>
+        </div>
+        <div id="result"></div>
+    </div>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+    <script>
+
+const questions = [
+            {
+                question: "What is your monthly income?",
+                options: ["Less than $2,000", "$2,000 - $5,000", "$5,000 - $10,000", "More than $10,000"]
+            },
+            {
+                question: "How much of your monthly income can you comfortably set aside for investments?",
+                options: ["Less than 5%", "5% - 10%", "10% - 20%", "More than 20%"]
+            },
+            {
+                question: "How would you describe your knowledge of cryptocurrency and staking?",
+                options: ["Beginner", "Intermediate", "Advanced", "Expert"]
+            },
+            {
+                question: "How long have you been involved in cryptocurrency investments?",
+                options: ["Less than 6 months", "6 months to 1 year", "1-3 years", "More than 3 years"]
+            },
+            {
+                question: "How would you react if your investment lost 20% of its value in a month?",
+                options: ["Sell immediately", "Be very concerned", "Hold and wait", "Buy more"]
+            },
+            {
+                question: "What is your primary goal for staking?",
+                options: ["Preserve capital", "Steady, low-risk returns", "Balance growth and security", "Maximize returns"]
+            },
+            {
+                question: "How long are you planning to stake your assets?",
+                options: ["Less than 3 months", "3-6 months", "6-12 months", "More than 1 year"]
+            },
+            {
+                question: "How often do you check your investment performance?",
+                options: ["Multiple times a day", "Daily", "Weekly", "Monthly or less"]
+            },
+            {
+                question: "What percentage of your portfolio are you willing to allocate to high-risk investments?",
+                options: ["0% - 5%", "5% - 15%", "15% - 30%", "More than 30%"]
+            },
+            {
+                question: "Which statement best describes your investment philosophy?",
+                options: ["Guaranteed low returns", "Small risks, slightly better returns", "Moderate risks, better returns", "High risks, chance of high returns"]
+            }
+        ];
+
+        let currentQuestion = 0;
+        let score = 0;
+
+        function displayQuestion() {
+            const questionEl = document.getElementById('question');
+            const optionsEl = document.getElementById('options');
+            
+            questionEl.textContent = questions[currentQuestion].question;
+            optionsEl.innerHTML = '';
+            
+            questions[currentQuestion].options.forEach((option, index) => {
+                const optionEl = document.createElement('div');
+                optionEl.classList.add('option');
+                optionEl.textContent = option;
+                optionEl.onclick = () => selectOption(index + 1);
+                optionsEl.appendChild(optionEl);
+            });
+        }
+
+        function selectOption(value) {
+            score += value;
+            currentQuestion++;
+            
+            if (currentQuestion < questions.length) {
+                displayQuestion();
+            } else {
+                showResult();
+            }
+        }
+
+        function showResult() {
+            const resultEl = document.getElementById('result');
+            const quizContainer = document.getElementById('question-container');
+            
+            quizContainer.style.display = 'none';
+            
+            let recommendation = '';
+            if (score <= 20) {
+                recommendation = "We recommend our Stable Duo (risk-free) product. This option offers the lowest risk and is suitable for those who prioritize capital preservation.";
+            } else if (score <= 30) {
+                recommendation = "We recommend our Legacy Staking (conservative risk) product. This option offers a balance between security and returns, suitable for those comfortable with moderate risk.";
+            } else {
+                recommendation = "We recommend our Apex Pro (highest rewards with significant risk) product. This option offers the potential for high returns but comes with higher risk, suitable for experienced investors comfortable with volatility.";
+            }
+            
+            resultEl.innerHTML = `
+                <h2>Your Result</h2>
+                <p>${recommendation}</p>
+            `;
+        }
+        // ... (previous JavaScript code remains the same) ...
+
+        // Modify the Three.js setup
+        const scene = new THREE.Scene();
+        const camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 0.1, 1000);
+        const renderer = new THREE.WebGLRenderer({canvas: document.getElementById('canvas'), alpha: true});
+        renderer.setSize(window.innerWidth, window.innerHeight);
+
+        const geometry = new THREE.IcosahedronGeometry(1, 0);
+        const material = new THREE.MeshBasicMaterial({color: 0x8e2de2, wireframe: true});
+        const icosahedron = new THREE.Mesh(geometry, material);
+        scene.add(icosahedron);
+
+        camera.position.z = 5;
+
+        function animate() {
+            requestAnimationFrame(animate);
+            icosahedron.rotation.x += 0.005;
+            icosahedron.rotation.y += 0.005;
+            renderer.render(scene, camera);
+        }
+
+        animate();
+
+        function resizeCanvas() {
+            camera.aspect = window.innerWidth / window.innerHeight;
+            camera.updateProjectionMatrix();
+            renderer.setSize(window.innerWidth, window.innerHeight);
+        }
+
+        window.addEventListener('resize', resizeCanvas);
+        window.addEventListener('orientationchange', resizeCanvas);
+
+        displayQuestion();
+    </script>
+</body>
+</html>

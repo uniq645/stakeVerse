@@ -1,0 +1,330 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Web3 Flip Card Sign Up / Sign In</title>
+    <script src="./js/signup.js" defer></script>
+    <style>
+        :root {
+            --primary-color: #00ffff; /* Cyan */
+            --secondary-color: #8a2be2; /* Blue Violet */
+            --background-color: #0f0f1a; /* Very Dark Blue */
+            --card-background: #1a1a2e; /* Dark Blue */
+            --text-color: #ffffff;
+            --error-color: #ff4757;
+            --success-color: #2ed573;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Roboto', sans-serif;
+            background-color: var(--background-color);
+            color: var(--text-color);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            perspective: 1000px;
+        }
+        .background-image {
+  background-image: url(./assets/backpic.jpg);
+  background-repeat: no-repeat;
+  background-size: cover;
+  background-position: center;
+  height: 500px; /* adjust to desired height */
+  width: 100%; /* adjust to desired width */
+}
+
+        .container {
+            width: 400px;
+            height: 500px;
+            position: relative;
+            transform-style: preserve-3d;
+            transition: transform 0.8s;
+        }
+
+        .container.flipped {
+            transform: rotateY(180deg);
+        }
+
+        .card {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            backface-visibility: hidden;
+            background-color: var(--card-background);
+            border-radius: 10px;
+            box-shadow: 0 0 20px rgba(0, 255, 255, 0.2);
+            padding: 30px;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+        }
+
+        .card.back {
+            transform: rotateY(180deg);
+        }
+
+        h2 {
+            text-align: center;
+            color: var(--primary-color);
+            margin-bottom: 20px;
+            font-size: 28px;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+        }
+
+        form {
+            display: flex;
+            flex-direction: column;
+        }
+
+        .input-group {
+            position: relative;
+            margin-bottom: 20px;
+        }
+
+        input {
+            width: 100%;
+            padding: 10px;
+            background-color: rgba(255, 255, 255, 0.1);
+            border: none;
+            border-radius: 5px;
+            color: var(--text-color);
+            font-size: 16px;
+            transition: all 0.3s;
+        }
+
+        input:focus {
+            outline: none;
+            box-shadow: 0 0 0 2px var(--primary-color);
+        }
+
+        label {
+            position: absolute;
+            left: 10px;
+            top: 10px;
+            color: #999;
+            transition: all 0.3s;
+            pointer-events: none;
+        }
+
+        input:focus + label,
+        input:not(:placeholder-shown) + label {
+            top: -20px;
+            left: 0;
+            font-size: 12px;
+            color: var(--primary-color);
+        }
+
+        button {
+            background-color: var(--secondary-color);
+            color: var(--text-color);
+            border: none;
+            padding: 12px;
+            border-radius: 5px;
+            font-size: 16px;
+            cursor: pointer;
+            transition: all 0.3s;
+            position: relative;
+            overflow: hidden;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        button:hover {
+            background-color: #9d4edd;
+            box-shadow: 0 0 10px rgba(138, 43, 226, 0.5);
+        }
+
+        .toggle-form {
+            text-align: center;
+            margin-top: 20px;
+        }
+
+        .toggle-form a {
+            color: var(--primary-color);
+            text-decoration: none;
+            font-weight: bold;
+            transition: all 0.3s;
+        }
+
+        .toggle-form a:hover {
+            text-shadow: 0 0 5px var(--primary-color);
+        }
+
+        .error-message {
+            color: var(--error-color);
+            font-size: 14px;
+            margin-top: 10px;
+            text-align: center;
+            opacity: 0;
+            transition: opacity 0.3s;
+        }
+
+        .error-message.show {
+            opacity: 1;
+        }
+
+        .loader {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(26, 26, 46, 0.8);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            border-radius: 5px;
+            opacity: 0;
+            transition: opacity 0.5s;
+            pointer-events: none;
+        }
+
+        .loader.show {
+            opacity: 1;
+            pointer-events: all;
+        }
+
+        .loader::after {
+            content: '';
+            width: 30px;
+            height: 30px;
+            border: 4px solid var(--primary-color);
+            border-top: 4px solid transparent;
+            border-radius: 50%;
+            animation: spin 3s linear infinite;
+        }
+
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+
+        @media (max-width: 480px) {
+            .container {
+                width: 90%;
+                height: auto;
+                min-height: 500px;
+            }
+        }
+    </style>
+</head>
+<body class="background-image">
+    <div class="container" id="container">
+        <div class="card front">
+            <h2>Sign In</h2>
+            <form id="signInForm">
+                <div class="input-group">
+                    <input type="text" id="signInName" required placeholder=" ">
+                    <label for="signInName">Username</label>
+                </div>
+                <div class="input-group">
+                    <input type="password" id="signInPassword" required placeholder=" ">
+                    <label for="signInPassword">Password</label>
+                </div>
+                <button type="submit" onclick="handleSignin(event)">
+                    Sign In
+                    <div class="loader"></div>
+                </button>
+            </form>
+            <div class="toggle-form">
+                <p>Don't have an account? <a href="#" id="showSignUp">Sign Up</a></p>
+            </div>
+            <div class="error-message" id="signInError"></div>
+        </div>
+        <div class="card back">
+            <h2>Sign Up</h2>
+            <form id="signUpForm">
+                <div class="input-group">
+                    <input type="text" id="signUpName" required placeholder=" ">
+                    <label for="signUpName">Username</label>
+                </div>
+                <div class="input-group">
+                    <input type="email" id="signUpEmail" required placeholder=" ">
+                    <label for="signUpEmail">Email</label>
+                </div>
+                <div class="input-group">
+                    <input type="password" id="signUpPassword" required placeholder=" ">
+                    <label for="signUpPassword">Password</label>
+                </div>
+                <button type="submit" onclick="handleSignup(event)">
+                    Sign Up
+                    <div class="loader"></div>
+                </button>
+            </form>
+            <div class="toggle-form">
+                <p>Already have an account? <a href="#" id="showSignIn">Sign In</a></p>
+            </div>
+            <div class="error-message" id="signUpError"></div>
+        </div>
+    </div>
+    <script>
+        // The JavaScript remains the same as in the previous version
+        const container = document.getElementById('container');
+        const showSignUpButton = document.getElementById('showSignUp');
+        const showSignInButton = document.getElementById('showSignIn');
+        const signInForm = document.getElementById('signInForm');
+        const signUpForm = document.getElementById('signUpForm');
+        const signInError = document.getElementById('signInError');
+        const signUpError = document.getElementById('signUpError');
+
+        //Validate session
+        const storedSession = JSON.parse(localStorage.getItem('session'));
+
+        showSignUpButton.addEventListener('click', () => {
+            container.classList.add('flipped');
+        });
+
+        showSignInButton.addEventListener('click', () => {
+            container.classList.remove('flipped');
+        });
+
+        signInForm.addEventListener('submit', (e) => {
+            // Simulate sign in
+            handleSignin(e);
+        });
+
+        // Floating label animation
+        const inputs = document.querySelectorAll('input');
+        inputs.forEach(input => {
+            input.addEventListener('focus', () => {
+                input.classList.add('filled');
+            });
+            input.addEventListener('blur', () => {
+                if (input.value === '') {
+                    input.classList.remove('filled');
+                }
+            });
+        });
+
+        // Button press animation and loader
+        const buttons = document.querySelectorAll('button');
+        buttons.forEach(button => {
+            button.addEventListener('mousedown', () => {
+                button.style.transform = 'scale(0.95)';
+            });
+            button.addEventListener('mouseup', () => {
+                button.style.transform = 'scale(1)';
+            });
+            button.addEventListener('mouseleave', () => {
+                button.style.transform = 'scale(1)';
+            });
+            button.addEventListener('click', (e) => {
+                const loader = button.querySelector('.loader');
+                loader.classList.add('show');
+                setTimeout(() => {
+                    loader.classList.remove('show');
+                }, 2000); // Simulating a 2-second loading time
+            });
+        });
+    </script>
+</body>
+</html>

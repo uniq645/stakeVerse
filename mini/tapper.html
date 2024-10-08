@@ -1,0 +1,375 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Cosmic Coin Collector</title>
+    <style>
+        body { margin: 0; padding: 0; overflow: hidden; background: #000; }
+
+        #gameCanvas { position: absolute; top: 0; left: 0; width: 100%; height: 100%; }
+        #scoreDisplay, #timerDisplay, #highScoreDisplay {
+            position: absolute;
+            top: 10px;
+            font-family: Arial, sans-serif;
+            font-size: 24px;
+            color: #FFD700;
+            text-shadow: 2px 2px 4px #000000;
+        }
+        #scoreDisplay { left: 10px; z-index: 100; }
+        #timerDisplay { right: 10px; z-index: 100;}
+        #highScoreDisplay { left: 50%; transform: translateX(-50%); z-index: 100;}
+        #retryButton {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            padding: 15px 30px;
+            font-size: 24px;
+            font-weight: bold;
+            background: linear-gradient(45deg, #FFD700, #FFA500);
+            border: none;
+            border-radius: 25px;
+            color: #000;
+            cursor: pointer;
+            box-shadow: 0 0 15px rgba(255, 215, 0, 0.7);
+            display: none;
+            z-index: 100;
+        }
+
+        .back-btn {
+  position: absolute;
+  top: 90%;
+  left:2%;
+  display: inline-block;
+  background-color: #333;
+  color: #f0c347;
+  padding: 10px 20px;
+  border-radius: 5px;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  text-decoration: none;
+  transition: background-color 0.2s ease;
+  z-index: 1000;
+}
+
+.back-btn:hover {
+  background-color: #555;
+}
+
+.back-btn img {
+  vertical-align: middle;
+  margin-right: 10px;
+}
+
+.back-btn span {
+  font-size: 18px;
+  font-weight: bold;
+  line-height: 1.5;
+}
+    </style>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/pixi.js/6.5.2/browser/pixi.min.js"></script>
+</head>
+<body>
+    <a href="../Games.html" class="back-btn">
+        <span>&leftleftarrows; Back</span>
+      </a>
+    <div id="scoreDisplay">Score: 0</div>
+    <div id="timerDisplay">Time: 60</div>
+    <div id="highScoreDisplay">High Score: 0</div>
+    <button id="retryButton">Retry</button>
+    <script>
+        const app = new PIXI.Application({
+            width: window.innerWidth,
+            height: window.innerHeight,
+            backgroundColor: 0x000000,
+            resolution: window.devicePixelRatio || 1
+        });
+        document.body.appendChild(app.view);
+        app.view.id = 'gameCanvas';
+
+        let score = 0;
+        let highScore = 0;
+        let gameTime = 60;
+        let gameActive = false;
+        let background, itemContainer;
+        let uname;
+        let loyaltyPoints;
+
+        function setup() {
+            createBackground();
+            createItemContainer();
+            
+            app.ticker.add(gameLoop);
+            app.stage.interactive = true;
+            app.stage.on('pointerdown', onTap);
+
+            document.getElementById('retryButton').addEventListener('click', startGame);
+
+            startGame();
+        }
+
+        function createBackground() {
+            background = new PIXI.Graphics();
+            background.beginFill(0x000000);
+            background.drawRect(0, 0, app.screen.width, app.screen.height);
+            background.endFill();
+            app.stage.addChild(background);
+
+            for (let i = 0; i < 200; i++) {
+                const star = new PIXI.Graphics();
+                star.beginFill(0xFFFFFF);
+                star.drawCircle(0, 0, Math.random() * 2);
+                star.endFill();
+                star.x = Math.random() * app.screen.width;
+                star.y = Math.random() * app.screen.height;
+                star.alpha = Math.random() * 0.5 + 0.5;
+                background.addChild(star);
+            }
+        }
+
+        function createItemContainer() {
+            itemContainer = new PIXI.Container();
+            app.stage.addChild(itemContainer);
+        }
+
+        function startGame() {
+    score = 0;
+    gameTime = 60;
+    gameActive = true;
+    updateScore();
+    updateTimer();
+    document.getElementById('retryButton').style.display = 'none';
+    
+    // Remove the overlay and final score text
+    while (app.stage.children.length > 2) {  // Keep only background and itemContainer
+        app.stage.removeChildAt(app.stage.children.length - 1);
+    }
+}
+
+        function gameLoop(delta) {
+            if (!gameActive) return;
+
+            if (Math.random() < 0.05) {
+                createItem(Math.random() < 0.7 ? 'coin' : 'mine');
+            }
+
+            itemContainer.children.forEach(item => {
+                item.y += item.speed * delta;
+                if (item.y > app.screen.height) {
+                    itemContainer.removeChild(item);
+                }
+            });
+
+            gameTime -= 1/60;
+            updateTimer();
+
+            if (gameTime <= 0) {
+                endGame();
+            }
+        }
+
+        function createItem(type) {
+            const item = new PIXI.Graphics();
+            if (type === 'coin') {
+                item.beginFill(0xFFD700);
+                item.drawCircle(0, 0, 15);
+            } else {
+                item.beginFill(0xFF0000);
+                item.moveTo(0, -15);
+                item.lineTo(15, 0);
+                item.lineTo(0, 15);
+                item.lineTo(-15, 0);
+                item.lineTo(0, -15);
+            }
+            item.endFill();
+            item.x = Math.random() * app.screen.width;
+            item.y = -50;
+            item.speed = 2 + Math.random() * 2;
+            item.type = type;
+            itemContainer.addChild(item);
+        }
+
+        function onTap(event) {
+            if (!gameActive) return;
+
+            const tappedItems = itemContainer.children.filter(item => {
+                return Math.abs(item.x - event.data.global.x) < 30 &&
+                       Math.abs(item.y - event.data.global.y) < 30;
+            });
+
+            tappedItems.forEach(item => {
+                if (item.type === 'coin') {
+                    score += 10;
+                    createParticleEffect(item.x, item.y, 0xFFD700);
+                } else if (item.type === 'mine') {
+                    score = Math.max(0, score - 20);
+                    createParticleEffect(item.x, item.y, 0xFF0000);
+                }
+                itemContainer.removeChild(item);
+            });
+
+            updateScore();
+        }
+
+        function createParticleEffect(x, y, color) {
+            for (let i = 0; i < 10; i++) {
+                const particle = new PIXI.Graphics();
+                particle.beginFill(color);
+                particle.drawCircle(0, 0, 2);
+                particle.endFill();
+                particle.x = x;
+                particle.y = y;
+                particle.vx = (Math.random() - 0.5) * 5;
+                particle.vy = (Math.random() - 0.5) * 5;
+                app.stage.addChild(particle);
+
+                app.ticker.add(() => {
+                    particle.x += particle.vx;
+                    particle.y += particle.vy;
+                    particle.alpha -= 0.01;
+                    if (particle.alpha <= 0) {
+                        app.stage.removeChild(particle);
+                    }
+                });
+            }
+        }
+
+        function updateScore() {
+            document.getElementById('scoreDisplay').textContent = `Score: ${score}`;
+            console.log("Final Score: "+score);
+        }
+
+        function updateTimer() {
+            document.getElementById('timerDisplay').textContent = `Time: ${Math.ceil(gameTime)}`;
+        }
+
+        function endGame() {
+    gameActive = false;
+    if (score > highScore) {
+        highScore = score;
+        document.getElementById('highScoreDisplay').textContent = `High Score: ${highScore}`;
+    }
+    loyaltyPoints += (score / 2);
+    giveReward()
+    // Create an overlay with the final score
+    const overlay = new PIXI.Graphics();
+    overlay.beginFill(0x000000, 0.7);
+    overlay.drawRect(0, 0, app.screen.width, app.screen.height);
+    overlay.endFill();
+    app.stage.addChild(overlay);
+    
+    const finalScoreText = new PIXI.Text(`Final Score: ${score}`, {
+        fontFamily: 'Arial',
+        fontSize: 48,
+        fill: 0xFFD700,
+        align: 'center'
+    });
+    finalScoreText.anchor.set(0.5);
+    finalScoreText.x = app.screen.width / 2;
+    finalScoreText.y = app.screen.height / 2 - 50;
+    app.stage.addChild(finalScoreText);
+    
+    document.getElementById('retryButton').style.display = 'block';
+}
+
+        window.addEventListener('resize', () => {
+            app.renderer.resize(window.innerWidth, window.innerHeight);
+            background.width = app.screen.width;
+            background.height = app.screen.height;
+        });
+
+        setup();
+
+        
+        const WEBAPP_URL = 'https://script.google.com/macros/s/AKfycbymvjCJEg2nEADZUVJeRHeNZT0ZfuXs_QnlFfJi8tZcsBAztiwXJ0Mm7kLGxy9bta4/exec'; // Replace with your Google Apps Script Web App URL
+
+        async function makeRequest(data) {
+            let final;
+            try {
+                const response = await fetch(WEBAPP_URL, {
+                    method: 'POST',
+                    mode: 'cors',
+                    headers: {
+                        'Content-Type': 'application/x-www-form-urlencoded',
+                    },
+                    body: new URLSearchParams(data),
+                });
+                if (!response.ok) {
+                    throw new Error(`HTTP error! status: ${response.status}`);
+                }
+                const result = await response.json();
+                final = result;
+            } catch (error) {
+                console.error('Error:', error);
+                final = "'Error: ' + error.message";
+            }
+            return final;
+        }
+
+    async function handlePort(){
+        try {
+            let query = `WHERE UserID = '${uname}'`;
+            let response = await makeRequest({
+            action: 'query',
+            sheet: 'Portforlio',
+            query: query
+        });
+
+        console.log(response);
+        if(response == "Error"){console.error("Error when making request")}
+        if(response.status === 'success' && Array.isArray(response.data)) {
+            let info = response.data[1];
+            loyaltyPoints = info[6];
+         } 
+            else{
+                  throw new Error('Unexpected data format from server') }    
+                }
+                catch (error) {
+                console.error(error);
+                alert('Unexpected error occurred. Please try again.');
+              }
+          }
+
+        function updateData(sheet,condCol,condVal,updCol,updVal) {
+                makeRequest({
+                action: 'update',
+                sheet: sheet,
+                condition: JSON.stringify({column: condCol, value: condVal}),
+                updateValues: JSON.stringify({column: updCol, value: updVal})
+        });}
+
+        function giveReward(){
+            updateData("Portforlio","UserID",uname, "Loyal Points", loyaltyPoints);
+            console.log("here give");
+        }
+
+
+
+        // seetting up session links
+window.onload = function() {
+// Parse the URL to get the username
+const urlParams = new URLSearchParams(window.location.search);
+const username = urlParams.get('username');
+
+if (username) {
+// Decode the username to handle special characters
+const item = document.querySelector('.back-btn');
+const decodedUsername = decodeURIComponent(username);
+uname = decodedUsername;
+console.log( `Hello, ${decodedUsername}!`);
+handlePort();
+const encodedUsername = encodeURIComponent(uname);
+var extension = `?username=${encodedUsername}`;
+let url = item.getAttribute('href');
+    let extURL = url + extension;
+    item.setAttribute("href", extURL);
+
+} else {
+console.log('No user found. Please sign up.');
+window.location.href = `signup.html`;
+}
+}
+
+    </script>
+</body>
+</html>

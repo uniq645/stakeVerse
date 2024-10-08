@@ -1,0 +1,371 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Secure Wallet Deposit - NOWPayments</title>
+    <style>
+        :root {
+            --primary-color: #4a90e2;
+            --secondary-color: #34c759;
+            --background-color: #1a1a1a;
+            --card-background: #2a2a2a;
+            --text-color: #ffffff;
+            --highlight-color: #ffd700;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: var(--background-color);
+            color: var(--text-color);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            padding: 20px;
+        }
+
+        .container {
+            background-color: var(--card-background);
+            border-radius: 12px;
+            padding: 30px;
+            max-width: 500px;
+            width: 100%;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+        }
+
+        h1 {
+            color: var(--highlight-color);
+            text-align: center;
+            margin-bottom: 30px;
+            font-size: 28px;
+            font-weight: 600;
+        }
+
+        .input-group {
+            position: relative;
+            margin-bottom: 25px;
+            display: flex;
+        }
+
+        input[type="text"] {
+            width: 100%;
+            padding: 12px 15px;
+            border: 1px solid #444;
+            border-radius: 6px;
+            background-color: #333;
+            color: var(--text-color);
+            font-size: 16px;
+            transition: all 0.3s ease;
+        }
+
+        input[type="text"]:focus {
+            outline: none;
+            border-color: var(--primary-color);
+            box-shadow: 0 0 0 2px rgba(74, 144, 226, 0.2);
+        }
+        #paymentID{
+            width: 90%;
+            margin-right: 10px;
+        }
+        button {
+            width: 100%;
+            padding: 12px;
+            background-color: var(--secondary-color);
+            color: white;
+            border: none;
+            border-radius: 6px;
+            font-size: 16px;
+            cursor: pointer;
+            transition: background-color 0.3s, transform 0.1s;
+        }
+
+        button:hover {
+            background-color: #2db84d;
+        }
+
+        button:active {
+            transform: scale(0.98);
+        }
+
+        #paymentStatus {
+            margin-top: 20px;
+            font-size: 16px;
+            text-align: center;
+            color: #aaa;
+        }
+
+        .widget-container {
+            position: relative;
+            width: 100%;
+            height: 623px;
+            margin-top: 30px;
+            border-radius: 12px;
+            overflow: hidden;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
+        }
+
+        .overlay {
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 80px;
+            background-color: rgb(31, 35, 39);
+            z-index: 1000;
+        }
+
+        iframe {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            border: none;
+        }
+
+        .info {
+            margin-top: 30px;
+            font-size: 14px;
+            color: #aaa;
+            background-color: rgba(255, 255, 255, 0.05);
+            border-radius: 8px;
+            padding: 15px;
+        }
+
+        .info h3 {
+            color: var(--primary-color);
+            margin-bottom: 10px;
+            font-size: 18px;
+        }
+
+        .info p {
+            margin-bottom: 8px;
+        }
+
+        .tooltip {
+            position: relative;
+            display: inline-block;
+            cursor: pointer;
+        }
+
+        .tooltip .tooltiptext {
+            visibility: hidden;
+            width: 250px;
+            background-color: #555;
+            color: #fff;
+            text-align: center;
+            border-radius: 6px;
+            padding: 10px;
+            position: absolute;
+            z-index: 1;
+            bottom: 125%;
+            left: 50%;
+            margin-left: -180px;
+            opacity: 0;
+            transition: opacity 0.3s;
+            font-size: 14px;
+        }
+
+        .tooltip:hover .tooltiptext {
+            visibility: visible;
+            opacity: 1;
+        }
+
+        .info-icon {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            width: 20px;
+            height: 20px;
+            background-color: var(--primary-color);
+            color: white;
+            border-radius: 50%;
+            font-weight: bold;
+            font-size: 14px;
+            margin-left: 10px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Secure Wallet Deposit</h1>
+        <div class="input-group">
+            <input type="text" id="paymentID" placeholder="Paste your payment ID here">
+            <span class="tooltip">
+                <span class="info-icon">i</span>
+                <span class="tooltiptext">Copy your payment ID when you initiate payment below</span>
+            </span>
+        </div>
+        <button id="checkStatus">Confirm Payment</button>
+        <div id="paymentStatus"></div>
+        <div class="widget-container">
+            <div class="overlay"></div>
+            <iframe src="https://nowpayments.io/embeds/donation-widget?api_key=BAK1976-WJ5M4TB-HSG7VF2-R02MW7P" width="100%" height="100%" frameborder="0" scrolling="no">
+                Can't load widget
+            </iframe>
+        </div>
+        <div class="info">
+            <h3>Additional Information</h3>
+            <p>• Use TRC20 Network for USDT Deposit (default for most wallets)</p>
+            <p>• Use BSC (Binance Smart Chain) Network for USDC Deposit</p>
+        </div>
+    </div>
+    <script>
+        const API_KEY = 'BAK1976-WJ5M4TB-HSG7VF2-R02MW7P'; // Replace with your NOWPayments API key
+        const API_BASE_URL = 'https://api.nowpayments.io/v1';
+        const paymentStatusDiv = document.getElementById('paymentStatus');
+        const payID = document.getElementById('paymentID');
+        const depositButton = document.getElementById("checkStatus");
+        let accBalance = 0;
+        var uname = "#345";
+
+const WEBAPP_URL = 'https://script.google.com/macros/s/AKfycbymvjCJEg2nEADZUVJeRHeNZT0ZfuXs_QnlFfJi8tZcsBAztiwXJ0Mm7kLGxy9bta4/exec'; // Replace with your Google Apps Script Web App URL
+
+async function makeRequest(data) {
+    let final;
+    try {
+        const response = await fetch(WEBAPP_URL, {
+            method: 'POST',
+            mode: 'cors',
+            headers: {
+                'Content-Type': 'application/x-www-form-urlencoded',
+            },
+            body: new URLSearchParams(data),
+        });
+        if (!response.ok) {
+            throw new Error(`HTTP error! status: ${response.status}`);
+        }
+        const result = await response.json();
+        final = result;
+        
+    } catch (error) {
+        console.error('Error:', error);
+        final = "'Error: ' + error.message";
+
+    }
+    return final;
+}
+
+async function handlePort(){
+    try {
+        let query = `WHERE UserID = '${uname}'`;
+        let response = await makeRequest({
+          action: 'query',
+          sheet: 'Portforlio',
+          query: query
+        });
+
+      console.log(response);
+    
+      if(response == "Error"){console.error("Errow within making request")}
+
+      if(response.status === 'success' && Array.isArray(response.data)) {
+        let info = response.data[1];
+        accBalance = info[7];
+        } 
+        else{
+          throw new Error('Unexpected data format from server') }    
+        }
+        catch (error) {
+        console.error(error);
+        alert('Unexpected error occurred. Please try again.');
+      }
+  }
+
+let already = false;
+        function startPolling(paymentId) {
+            let pollCount = 0;
+            const maxPolls = 180; // Poll for up to 15 minutes (180 * 5 seconds)
+
+            const pollInterval = setInterval(() => {
+                pollCount++;
+
+                if (pollCount > maxPolls) {
+                    clearInterval(pollInterval);
+                    paymentStatus.textContent = 'Payment Status: Expired';
+                    return;
+                }
+
+                fetch(`${API_BASE_URL}/payment/${paymentId}`, {
+                    headers: {
+                        'x-api-key': API_KEY
+                    }
+                })
+                .then(response => response.json())
+                .then(data => {
+                    paymentStatus.textContent = `Payment Status: ${data.payment_status}`;
+                    //use payid, actually_paid, pay_currency to veriify
+                    if (data.payment_status == 'waiting' && already == false) {
+                        let strData = String(uname+","+data.payment_id+","+"N/A"+","+data.pay_currency+","+data.price_amount+","+data.payment_status+","+data.updated_at);
+                        values = strData.split(",");
+                        //log to trans table
+                        makeRequest({
+                            action: 'append',
+                            sheet: Trans,
+                            values: JSON.stringify(values)
+                         });
+                         already = true;
+                    }
+
+                    if (data.payment_status == 'confirming' || data.payment_status === 'sending') {
+                        let strData = String(uname+","+data.payment_id+","+data.actually_paid+","+data.pay_currency+","+data.price_amount+","+data.payment_status+","+data.updated_at);
+                        values = strData.split(",");
+                        //log to trans table
+                        makeRequest({
+                            action: 'append',
+                            sheet: Trans,
+                            values: JSON.stringify(values)
+                         });
+                        clearInterval(pollInterval);
+                         //updates account balance
+                         accBalance += Number(data.price_amount);
+                         updateData("Portforlio","UserID",uname,accBalance);
+                    }
+                })
+                .catch(error => console.error('Error checking payment status:', error));
+            }, 5000); // Poll every 5 seconds
+        }   
+        
+
+
+window.onload = function() {
+    const urlParams = new URLSearchParams(window.location.search);
+    const username = urlParams.get('username');
+    
+    if (username) {
+        // Decode the username to handle special characters
+        const decodedUsername = decodeURIComponent(username);
+        uname = decodedUsername;
+        console.log( `Hello, ${decodedUsername}!`);
+        handlePort();
+        const encodedUsername = encodeURIComponent(uname);
+        var extension = `?username=${encodedUsername}`;
+        navItems.forEach(nav => {   
+            let url = nav.getAttribute('href');
+            let extURL = url + extension;
+            nav.setAttribute("href", extURL);
+        });
+    } else {
+        console.log('No user found. Please sign up.');
+        window.location.href = `signup.html`;
+    }
+}
+        depositButton.addEventListener('click', () => {
+            const pay = payID.value;
+
+            if (!pay || isNaN(pay)) {
+                alert('Please enter a valid ID.');
+                return;
+            } else{startPolling(pay)}
+        });
+        
+   </script>
+</body>
+</html>

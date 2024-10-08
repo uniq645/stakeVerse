@@ -1,0 +1,672 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>stakeVerse - Earnings</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/aos@2.3.4/dist/aos.css">
+    <link rel="stylesheet" href="./css/Earning.css">
+    <script src="./js/logic.js"></script>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;700&display=swap');
+
+        :root {
+            --dngrey: #0A0E14;
+            --lgrey: #2c2f33;
+            --wgrey: #454f55;
+            --mwrite: #c7c9cb;
+            --lblue: #3770eb;
+            --ayell: #ff8412;
+            --white: #ffffff;
+            --blue: #1a1d23;
+            --green: #34C759;
+        }
+
+        .navbar {
+            position: fixed;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            background: linear-gradient(135deg, #111, #000);
+            padding: 10px 0;
+            display: flex;
+            justify-content: space-around;
+            align-items: center;
+            box-shadow: 0 -2px 10px rgba(0, 0, 0, 0.5);
+            z-index: 1000;
+        }
+
+        .nav-item {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            text-decoration: none;
+            color: #555;
+            transition: all 0.3s ease;
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+            position: relative;
+        }
+
+        .nav-item:hover, .nav-item.active {
+            color: #00f5d4;
+            transform: translateY(-5px);
+        }
+
+        .nav-item svg {
+            width: 24px;
+            height: 24px;
+            fill: currentColor;
+        }
+
+        .glow {
+            position: absolute;
+            width: 40px;
+            height: 3px;
+            background: linear-gradient(90deg, transparent, #00f5d4, transparent);
+            bottom: -5px;
+            transition: all 0.3s ease;
+            border-radius: 3px;
+        }
+
+        #loader-wrapper {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: #1a1a1a;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            z-index: 9999;
+        }
+
+        .loader {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .dot {
+            width: 10px;
+            height: 10px;
+            background: #4a90e2;
+            border-radius: 50%;
+            margin: 0 8px;
+            animation: pulse 1.5s ease-in-out infinite;
+        }
+
+        .dot:nth-child(2) {
+            animation-delay: 0.2s;
+        }
+
+        .dot:nth-child(3) {
+            animation-delay: 0.4s;
+        }
+
+        @keyframes pulse {
+            0%, 100% {
+                transform: scale(0.8);
+                opacity: 0.5;
+            }
+            50% {
+                transform: scale(1.2);
+                opacity: 1;
+            }
+        }
+
+        .loading-text {
+            font-family: 'Arial', sans-serif;
+            font-size: 18px;
+            color: #ffffff;
+            margin-top: 20px;
+            letter-spacing: 2px;
+        }
+
+        .progress-bar {
+            width: 200px;
+            height: 2px;
+            background: rgba(255, 255, 255, 0.1);
+            margin-top: 20px;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .progress {
+            position: absolute;
+            top: 0;
+            left: 0;
+            height: 100%;
+            width: 0;
+            background: #4a90e2;
+            transition: width 0.5s ease;
+        }
+
+        body {
+            background-color: var(--dngrey);
+            font-family: 'Poppins', sans-serif;
+            color: var(--white);
+            margin: 0;
+            padding: 0;
+            transition: background-color 0.3s ease;
+            background-image: 
+                radial-gradient(circle at 10% 20%, rgba(55, 112, 235, 0.05) 0%, transparent 20%),
+                radial-gradient(circle at 90% 80%, rgba(255, 132, 18, 0.05) 0%, transparent 20%);
+            background-attachment: fixed;
+        }
+
+        .earnings-page {
+            max-width: 900px;
+            margin: 40px auto;
+            padding: 30px;
+            background-color: rgba(4, 9, 27, 0.8);
+            border-radius: 20px;
+            box-shadow: 0 0 30px rgba(85, 73, 17, 0.2);
+            backdrop-filter: blur(10px);
+        }
+
+        .header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 30px;
+            padding-bottom: 20px;
+            border-bottom: 1px solid rgba(69, 79, 85, 0.3);
+        }
+
+        .profit {
+            color: var(--ayell);
+            font-size: 1.2rem;
+            font-weight: 600;
+        }
+
+        .earn-rate {
+            font-size: 20px;
+            font-weight: 600;
+            color: var(--green);
+            animation: pulse 2s infinite;
+            text-shadow: 0 0 10px rgba(52, 199, 89, 0.3);
+        }
+
+        @keyframes pulse {
+            0% { transform: scale(1); }
+            50% { transform: scale(1.05); }
+            100% { transform: scale(1); }
+        }
+
+        .stats-section {
+            display: flex;
+            justify-content: space-between;
+            flex-wrap: wrap;
+        }
+
+        .stat-box {
+            background-color: rgba(55, 112, 235, 0.1);
+            padding: 25px;
+            border-radius: 15px;
+            margin: 10px;
+            width: calc(33.33% - 20px);
+            box-shadow: 0 0 20px rgba(55, 112, 235, 0.1);
+            transition: transform 0.3s, box-shadow 0.3s;
+            backdrop-filter: blur(5px);
+        }
+
+        .stat-box:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 25px rgba(55, 112, 235, 0.2);
+        }
+
+        .stat-box h2 {
+            margin-top: 0;
+            color: var(--mwrite);
+            font-size: 1.1rem;
+            font-weight: 600;
+        }
+
+        .value {
+            font-size: 28px;
+            font-weight: 700;
+            color: var(--lblue);
+            text-shadow: 0 0 10px rgba(55, 112, 235, 0.3);
+        }
+
+        .booster-section, .staking-section {
+            margin-top: 50px;
+        }
+
+        .booster-box, .staking-box {
+            background-color: rgba(69, 79, 85, 0.1);
+            padding: 25px;
+            border-radius: 15px;
+            margin: 15px 0;
+            display: flex;
+            align-items: center;
+            box-shadow: 0 0 15px rgba(0, 0, 0, 0.1);
+            transition: transform 0.3s, box-shadow 0.3s;
+            backdrop-filter: blur(5px);
+        }
+
+
+        .booster-name {
+            font-size: 18px;
+            margin-left: 15px;
+            color: var(--mwrite);
+            font-weight: 600;
+        }
+
+        .booster-point, .staking-duration {
+            font-size: 14px;
+            color: var(--ayell);
+            margin-left: auto;
+            font-weight: 600;
+        }
+
+        .staking-amount {
+            font-size: 18px;
+            color: var(--lblue);
+            font-weight: 600;
+        }
+
+        .staking-reward {
+            font-size: 18px;
+            color: var(--green);
+            margin-left: 20px;
+            font-weight: 600;
+        }
+
+        .reap-button {
+            background-color: var(--blue);
+            border: none;
+            padding: 15px 30px;
+            font-size: 18px;
+            font-weight: 600;
+            color: var(--ayell);
+            border-radius: 10px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            box-shadow: 0 5px 15px rgba(26, 29, 35, 0.3);
+        }
+
+        .reap-button:hover {
+            background-color: #253341;
+            transform: translateY(-2px);
+            box-shadow: 0 8px 20px rgba(26, 29, 35, 0.4);
+        }
+
+        .reap-icon {
+            width: 24px;
+            height: 24px;
+            margin-right: 10px;
+            fill: var(--ayell);
+        }
+
+        .booster-count {
+            background-color: rgba(58, 66, 85, 0.5);
+            padding: 8px 15px;
+            border-radius: 20px;
+            font-size: 0.9em;
+            font-weight: 600;
+            margin-left: 15px;
+        }
+
+        .show-more {
+            position: relative;
+            font-size: 14px;
+            color: var(--mwrite);
+            cursor: pointer;
+            transition: color 0.3s ease;
+        }
+
+        .show-more:hover {
+            color: var(--lblue);
+        }
+
+        .dotted-underline {
+            border-bottom: 1px dotted var(--wgrey);
+        }
+
+        .tooltip {
+            position: absolute;
+            background-color: rgba(51, 51, 51, 0.9);
+            border: 1px solid #444;
+            padding: 10px 15px;
+            width: 150px;
+            display: none;
+            z-index: 1;
+            box-shadow: 0 0 20px rgba(0, 0, 0, 0.3);
+            font-size: 12px;
+            color: var(--mwrite);
+            border-radius: 8px;
+            backdrop-filter: blur(5px);
+        }
+
+        .tooltip::before {
+            content: "";
+            position: absolute;
+            top: -8px;
+            left: 10px;
+            border-bottom: 8px solid rgba(51, 51, 51, 0.9);
+            border-left: 8px solid transparent;
+            border-right: 8px solid transparent;
+        }
+
+        #subsTable {
+            width: 100%;
+            border-collapse: collapse;
+        }
+
+        #subsTable th, #subsTable td {
+            padding: 12px;
+            text-align: left;
+            border-bottom: 1px solid rgba(69, 79, 85, 0.2);
+        }
+
+        #subsTable th {
+            background-color: rgba(55, 112, 235, 0.1);
+            color: var(--lblue);
+            font-weight: 600;
+        }
+
+        #extendContract {
+            display: none;
+            margin-top: 20px;
+            color: var(--lblue);
+            cursor: pointer;
+            font-weight: 600;
+            transition: color 0.3s ease;
+            margin-bottom: 50px;
+        }
+
+        #extendContract:hover {
+            color: var(--ayell);
+        }
+
+        @media (max-width: 768px) {
+            .earnings-page {
+                margin: 20px;
+                padding: 20px;
+            }
+
+            .stat-box {
+                width: calc(50% - 20px);
+            }
+        }
+
+        @media (max-width: 480px) {
+            .stat-box {
+                width: 100%;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div id="loader-wrapper">
+        <div class="loader">
+            <div class="dot"></div>
+            <div class="dot"></div>
+            <div class="dot"></div>
+        </div>
+        <div class="loading-text">LOADING</div>
+        <div class="progress-bar">
+            <div class="progress"></div>
+        </div>
+    </div>
+    <div class="earnings-page" data-aos="fade-up">
+        <div class="header">
+            <h2 class="profit">Earning Rate</h2>
+            <img src="./assets/usdtcon.png" alt="tether" width="35px" height="35px">
+            <span class="earn-rate" id="earningRate">$0.00</span>
+            
+        </div>
+      
+        <div class="stats-section">
+            <div class="stat-box" data-aos="fade-right">
+                <h2><i class="fas fa-chart-line"></i> Today's Earnings</h2>
+                <span class="value" id="todayEarnings">$0.00</span>
+            </div>
+            <div class="stat-box" data-aos="fade-up">
+                <h2><i class="fas fa-piggy-bank"></i> Total Earnings</h2>
+                <span class="value" id="totalEarnings">$0.00</span>
+            </div>
+            <button class="reap-button" id="reaper" data-aos="fade-left">
+                <svg class="reap-icon" viewBox="0 0 24 24">
+                  <path d="M12 2L4 12H2L12 22L20 12H22L12 2Z" />
+                  <path d="M12 10L8 14H16L12 10Z" />
+                </svg>
+                Reap
+            </button>
+        </div>
+        <span class="show-more" id="show-more"><span class="dotted-underline">Overall Earnings</span></span>
+        <div class="tooltip" id="tooltip">
+          <h4>Overall Earnings:</h4>
+          <p>$<span id="overEarn">1,200</span></p>
+        </div>
+        <div class="booster-section" data-aos="fade-up">
+            <h2><i class="fas fa-rocket"></i> Boosters</h2>
+            <span class="booster-count"><span id="boosterCount">0</span> boosters left</span> 
+            <div class="booster-box" data-aos="fade-right">
+                <i class="fas fa-bolt"></i>
+                <span class="booster-name">Lucky Spark</span>
+                <span class="booster-point">150% Earning rate</span>
+            </div>
+            <div class="booster-box" data-aos="fade-right" data-aos-delay="100">
+                <i class="fas fa-horse"></i>
+                <span class="booster-name">Stampede</span>
+                <span class="booster-point">250% for 3 days</span>
+            </div>
+            <div class="booster-box" data-aos="fade-right" data-aos-delay="200">
+                <i class="fas fa-cubes"></i>
+                <span class="booster-name">Block Buster</span>
+                <span class="booster-point">500% Earning rate</span>
+            </div>
+        </div>
+      
+        <div class="staking-section" data-aos="fade-up">
+            <h2><i class="fas fa-layer-group"></i> Staking Rewards</h2>
+            <div class="staking-box">
+                <table id="subsTable">
+                    <thead>
+                        <tr>
+                            <th>Plan</th>
+                            <th>Min Per Day($)</th>
+                            <th>Amount Staked</th>
+                            <th>Expires On</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <!-- Table rows will be dynamically inserted here -->
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+    <nav class="navbar">
+        <a href="./home.html" class="nav-item active" data-index="0">
+            <svg viewBox="0 0 24 24"><path d="M3 13h1v7c0 1.103.897 2 2 2h12c1.103 0 2-.897 2-2v-7h1a1 1 0 0 0 .707-1.707l-9-9a.999.999 0 0 0-1.414 0l-9 9A1 1 0 0 0 3 13zm9-8.586 6 6V15l.001 5H6v-9.586l6-6z"/><path d="M12 18c3.703 0 4.901-3.539 4.95-3.689l-1.9-.621c-.008.023-.781 2.31-3.05 2.31-2.238 0-3.02-2.221-3.051-2.316l-1.899.627C7.099 14.461 8.297 18 12 18z"/></svg>
+        </a>
+        <a href="./Earnings.html" class="nav-item" data-index="1">
+            <svg viewBox="0 0 24 24"><path d="M12 6C7.03 6 2 7.546 2 10.5v4C2 17.454 7.03 19 12 19s10-1.546 10-4.5v-4C22 7.546 16.97 6 12 6zm-8 8.5v-1.197a9.989 9.989 0 0 0 2 .86v1.881c-1.312-.514-2-1.126-2-1.544zm12 2.914v-1.96c2.446-.124 4-.66 4-1.454v-1.197a9.989 9.989 0 0 0 2 .86v1.881c0 1.19-2.638 1.989-6 1.87zm-6-4.72c-3.14 0-6-1.033-6-1.694 0-.661 2.86-1.694 6-1.694s6 1.033 6 1.694c0 .661-2.86 1.694-6 1.694z"/></svg>
+        </a>
+        <a href="./neotask.html" class="nav-item" data-index="2">
+            <svg viewBox="0 0 24 24"><path d="M22 5.18 10.59 16.6l-4.24-4.24 1.41-1.41 2.83 2.83 10-10L22 5.18zM12 20c-4.41 0-8-3.59-8-8s3.59-8 8-8c1.57 0 3.04.46 4.28 1.25l1.44-1.44C16.1 2.67 14.13 2 12 2 6.48 2 2 6.48 2 12s4.48 10 10 10c1.73 0 3.36-.44 4.78-1.22l-1.5-1.5c-1 .46-2.11.72-3.28.72zm7-5h-3v2h3v3h2v-3h3v-2h-3v-3h-2v3z"/></svg>
+        </a>
+        <a href="./refferal.html" class="nav-item" data-index="3">
+            <svg viewBox="0 0 24 24"><path d="M16 11c1.66 0 2.99-1.34 2.99-3S17.66 5 16 5c-1.66 0-3 1.34-3 3s1.34 3 3 3zm-8 0c1.66 0 2.99-1.34 2.99-3S9.66 5 8 5C6.34 5 5 6.34 5 8s1.34 3 3 3zm0 2c-2.33 0-7 1.17-7 3.5V19h14v-2.5c0-2.33-4.67-3.5-7-3.5zm8 0c-.29 0-.62.02-.97.05 1.16.84 1.97 1.97 1.97 3.45V19h6v-2.5c0-2.33-4.67-3.5-7-3.5z"/></svg>
+        </a>
+        <a href="./Account.html" class="nav-item" data-index="4">
+            <svg viewBox="0 0 24 24"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm0 3c1.66 0 3 1.34 3 3s-1.34 3-3 3-3-1.34-3-3 1.34-3 3-3zm0 14.2c-2.5 0-4.71-1.28-6-3.22.03-1.99 4-3.08 6-3.08 1.99 0 5.97 1.09 6 3.08-1.29 1.94-3.5 3.22-6 3.22z"/></svg>
+        </a>
+        <a href="./Games.html" class="nav-item" data-index="5">
+            <svg viewBox="0 0 24 24"><path d="M21 6H3c-1.1 0-2 .9-2 2v8c0 1.1.9 2 2 2h18c1.1 0 2-.9 2-2V8c0-1.1-.9-2-2-2zm-10 7H8v3H6v-3H3v-2h3V8h2v3h3v2zm4.5 2c-.83 0-1.5-.67-1.5-1.5s.67-1.5 1.5-1.5 1.5.67 1.5 1.5-.67 1.5-1.5 1.5zm4-3c-.83 0-1.5-.67-1.5-1.5S18.67 9 19.5 9s1.5.67 1.5 1.5-.67 1.5-1.5 1.5z"/></svg>
+        </a>
+        <div class="glow"></div>
+    </nav>
+    
+    <script src="https://cdn.jsdelivr.net/npm/aos@2.3.4/dist/aos.js"></script>
+    <script>
+        AOS.init({
+            duration: 1000,
+            once: true
+        });
+
+        const navItems = document.querySelectorAll('.nav-item');
+    const glow = document.querySelector('.glow');
+
+        navItems.forEach(item => {
+            item.addEventListener('click', () => {
+                navItems.forEach(navItem => navItem.classList.remove('active'));
+                item.classList.add('active');
+                const index = item.getAttribute('data-index');
+                glow.style.left = `calc(${index} * (100% / 6) + (100% / 12) - 20px)`;
+            });
+        });
+        document.addEventListener('DOMContentLoaded', function() {
+            const loaderWrapper = document.getElementById('loader-wrapper');
+            const progress = document.querySelector('.progress');
+            const loadingText = document.querySelector('.loading-text');
+            let loadProgress = 0;
+
+            function updateProgress() {
+                loadProgress += Math.random() * 15;
+                if (loadProgress > 100) loadProgress = 100;
+                progress.style.width = loadProgress + '%';
+                
+                if (loadProgress < 100) {
+                    setTimeout(updateProgress, 200);
+                } else {
+                    loadingText.textContent = 'READY';
+                    setTimeout(() => {
+                        loaderWrapper.style.opacity = '0';
+                        setTimeout(() => {
+                            loaderWrapper.style.display = 'none';
+                        }, 500);
+                    }, 500);
+                }
+            }
+
+            updateProgress();
+        });
+
+        let accBalance = 0;
+        let overall = 0;
+        const acrDaily = document.getElementById('todayEarnings');
+        const total = document.getElementById('totalEarnings');
+        const rate = document.getElementById('earningRate');
+        const overEarn = document.getElementById("overEarn");
+        let uname;
+
+        async function handlePort(){
+            try {
+                let query = `WHERE UserID = '${uname}'`;
+                let response = await makeRequest({
+                  action: 'query',
+                  sheet: 'Portforlio',
+                  query: query
+                });
+            
+              if(response == "Error"){console.error("Errow within making request")}
+
+              if(response.status === 'success' && Array.isArray(response.data)) {
+                let info = response.data[1];
+                overall = info[8];
+                overEarn.textContent = overall;
+                //create a temp portfolio object
+                let port = new Porfolio(account=info[7], loyal=info[6], pph=info[2], tot=info[4], daily=info[3]);
+                rate.textContent = "+"+Number(port.pph).toFixed(3)+ " /hour";
+                total.textContent = Number(port.totEarn).toFixed(2);
+                acrDaily.textContent = Number(port.daily).toFixed(2);
+                accBalance = port.acc;      //set account balance as well
+                } 
+                else{
+                  throw new Error('Unexpected data format from server') }    
+                }
+                catch (error) {
+                console.error(error);
+                alert('Unexpected error occurred. Please try again.');
+                //redirect to sign in page
+              }
+          }
+
+
+        function harvest(){
+            //transfer profits to acc and so on
+            let totalEarn = total.textContent;
+            accBalance += Number(totalEarn);
+            overall += Number(totalEarn);
+            updateData("Overall",overall); //updates overall
+            //add tot to account
+            updateData("Total", 0);
+            
+            setTimeout(()=>{
+                total.textContent = "0";
+                updateData("Account",accBalance);
+            },5000);
+            alert("Profits transferred to account balance!");
+        
+        }
+       document.getElementById("reaper").addEventListener("click",()=>{
+            let earned = Number(total.textContent);
+            if( earned == 0){
+                alert("Total Earnings is empty!");
+            } else if(earned >= 3){harvest()}
+            else{alert("Not enough to harvest, must reach $3")}   
+        });
+
+        function updateData(cname, uvalue) {
+            const conditionColumn = "UserID"
+            const conditionValue = uname;
+            const updateColumn = cname;
+            const updateValue = uvalue;
+            makeRequest({
+             action: 'update',
+            sheet: "Portforlio",
+            condition: JSON.stringify({column: conditionColumn, value: conditionValue}),
+            updateValues: JSON.stringify({column: updateColumn, value: updateValue})
+            });
+        }
+        
+        window.onload = function() {
+    // Parse the URL to get the username
+    const urlParams = new URLSearchParams(window.location.search);
+    const username = urlParams.get('username');
+    
+    if (username) {
+        // Decode the username to handle special characters
+        const decodedUsername = decodeURIComponent(username);
+        uname = decodedUsername;
+        handlePort();handleBoost();
+        const encodedUsername = encodeURIComponent(uname);
+        var extension = `?username=${encodedUsername}`;
+        navItems.forEach(item => {   
+                let url = item.getAttribute('href');
+                let extURL = url + extension;
+                item.setAttribute("href", extURL);
+            });
+    } else {
+        console.log('No user found. Please sign up.');
+        window.location.href = `./signup.html`;
+    }
+}
+
+
+        const showMore = document.getElementById("show-more");
+const tooltip = document.getElementById("tooltip");
+
+showMore.addEventListener("click", () => {
+  tooltip.style.display = "block";
+  setTimeout(() => {
+    tooltip.style.display = "none";
+  }, 3000); // Hide tooltip after 3 seconds
+});
+
+    </script>
+<script src="./js/Earning.js" defer></script>
+</body>
+</html>

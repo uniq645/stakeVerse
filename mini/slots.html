@@ -1,0 +1,292 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Web3 Staking Slot Game</title>
+    <style>
+
+        #game-container {
+
+            color: whitesmoke;
+            margin-top:20%;
+            margin-left: 20%;
+            width: 60%;
+            background-color: #1757707e;
+            border: 2px solid #ffd700;
+            padding: 20px;
+            border-radius: 10px;
+        }
+        #slot-machine {
+            display: flex;
+            justify-content: space-around;
+            margin-bottom: 20px;
+        }
+        .reel {
+            font-size: 48px;
+            background-color: #000020;
+            padding: 10px;
+            border-radius: 5px;
+            width: 60px;
+            text-align: center;
+        }
+        #spin-button {
+            background-color: #ffd700;
+            color: #000080;
+            border: none;
+            padding: 10px 20px;
+            font-size: 18px;
+            cursor: pointer;
+            display: block;
+            margin: 0 auto;
+        }
+        #spin-button:disabled {
+            background-color: #888;
+            cursor: not-allowed;
+        }
+        #loyalty-points, #result {
+            text-align: center;
+            margin-top: 10px;
+        }
+    </style>
+</head>
+<body>
+    <div id="game-container">
+        <div id="slot-machine">
+            <div class="reel" id="reel1">🍒</div>
+            <div class="reel" id="reel2">🍒</div>
+            <div class="reel" id="reel3">🍒</div>
+        </div>
+        <button id="spin-button">Spin (100 points)</button>
+        <div id="loyalty-points">Loyalty Points: 1000</div>
+        <div id="result"></div>
+    </div>
+
+    <script>
+        const symbols = ['🍒', '🍋', '🍊', '🍇', '💎', '7️⃣'];
+        const reels = [
+            document.getElementById('reel1'),
+            document.getElementById('reel2'),
+            document.getElementById('reel3')
+        ];
+        const spinButton = document.getElementById('spin-button');
+        const loyaltyPointsDisplay = document.getElementById('loyalty-points');
+        const resultDisplay = document.getElementById('result');
+        let loyaltyPoints;
+        let counter = localStorage.getItem("counter") || 0;
+        counter = Number(counter);
+
+        function updateLoyaltyPoints() {
+            loyaltyPointsDisplay.textContent = `Loyalty Points: ${loyaltyPoints}`;
+            spinButton.disabled = loyaltyPoints < 100;
+            if(counter >= 10){
+                resultDisplay.textContent = "You have reached the maximum spins for today!";
+                spinButton.disabled = true;
+                return;
+            }
+        }
+
+        function getRandomSymbol() {
+            return symbols[Math.floor(Math.random() * symbols.length)];
+        }
+
+        function chkDate(){
+            const now = new Date().getTime();
+            const lastResetTimestamp = localStorage.getItem('lastResetTimestamp') || 0;
+            if (now - lastResetTimestamp >= 20 * 60 * 60 * 1000) {
+                localStorage.setItem('counter', '0');
+                localStorage.setItem('lastResetTimestamp', now);
+            }
+        }
+
+        function spin() {
+            chkDate();
+            // rest of your code
+            if (loyaltyPoints < 100) {
+                resultDisplay.textContent = "Not enough loyalty points!";
+                return;
+            }
+
+            counter++;
+            if(counter >= 10){
+                resultDisplay.textContent = "You have reached the maximum spins for today!";
+                spinButton.disabled = true;
+                localStorage.setItem("counter", "10");
+                localStorage.setItem('lastResetTimestamp', now);
+                return;
+            }
+            
+
+            loyaltyPoints -= 100;
+            updateLoyaltyPoints();
+            spinButton.disabled = true;
+            resultDisplay.textContent = "Spinning...";
+
+            let spins = 0;
+            const maxSpins = 15;
+            const spinInterval = setInterval(() => {
+                reels.forEach(reel => {
+                    reel.textContent = getRandomSymbol();
+                });
+
+                spins++;
+                if (spins >= maxSpins) {
+                    clearInterval(spinInterval);
+                    checkWin();
+                    spinButton.disabled = false;
+                }
+            }, 100);
+        }
+
+        function checkWin() {
+            const results = reels.map(reel => reel.textContent);
+            
+            if (results[0] === results[1] && results[1] === results[2]) {
+                // All symbols match
+                const winAmount = getWinAmount(results[0]);
+                loyaltyPoints += winAmount;
+                resultDisplay.textContent = `You won ${winAmount} points!`;
+            } else if (results[0] === results[1] || results[1] === results[2] || results[0] === results[2]) {
+                // Two symbols match
+                const randomNumber = Math.random();
+                if (randomNumber < 0.05) {
+                    accBalance += 0.5;
+                    resultDisplay.textContent = "You won 0.5 usdt !";
+                } else if(randomNumber >= 0.05 && randomNumber <= 0.75){
+                    loyaltyPoints += Math.round(500 +(randomNumber * 300));
+                    resultDisplay.textContent = "You won 500 points!";
+                }
+                else if (randomNumber > 0.75 && randomNumber < 0.95) {
+                    accBalance += 0.1;
+                    resultDisplay.textContent = "You won 0.1 usdt!";
+                }else if (randomNumber >= 0.95 && randomNumber < 1) {
+                    accBalance += 0.2;
+                    resultDisplay.textContent = "You won 0.2 usdt!";
+                }
+
+            } else {
+                const randomNumber = Math.random();
+                if (randomNumber < 0.49) {
+                    resultDisplay.textContent = "Try again!";
+                } else if (randomNumber > 0.5) {
+                    loyaltyPoints += 200;
+                    resultDisplay.textContent = "You won 50 points!";
+                }
+            }
+
+            updateLoyaltyPoints();
+        }
+
+        function getWinAmount(symbol) {
+            switch (symbol) {
+                case '💎': return 5000;
+                case '7️⃣': return 3500;
+                case '🍇': return 2500;
+                case '🍊': return 1250;
+                case '🍋': return 1000;
+                case '🍒': return 2000;
+                default: return 0;
+            }
+        }
+
+        spinButton.addEventListener('click', spin);
+        
+
+        let uname;
+        const WEBAPP_URL = 'https://script.google.com/macros/s/AKfycbymvjCJEg2nEADZUVJeRHeNZT0ZfuXs_QnlFfJi8tZcsBAztiwXJ0Mm7kLGxy9bta4/exec'; // Replace with your Google Apps Script Web App URL
+
+        async function makeRequest(data) {
+            let final;
+            try {
+                const response = await fetch(WEBAPP_URL, {
+                    method: 'POST',
+                    mode: 'cors',
+                    headers: {
+                        'Content-Type': 'application/x-www-form-urlencoded',
+                    },
+                    body: new URLSearchParams(data),
+                });
+                if (!response.ok) {
+                    throw new Error(`HTTP error! status: ${response.status}`);
+                }
+                const result = await response.json();
+                final = result;
+            } catch (error) {
+                console.error('Error:', error);
+                final = "'Error: ' + error.message";
+            }
+            return final;
+        }
+
+    let accBalance;
+    async function handlePort(){
+        try {
+            let query = `WHERE UserID = '${uname}'`;
+            let response = await makeRequest({
+            action: 'query',
+            sheet: 'Portforlio',
+            query: query
+        });
+
+        console.log(response);
+        if(response == "Error"){console.error("Error when making request")}
+        if(response.status === 'success' && Array.isArray(response.data)) {
+            let info = response.data[1];
+            accBalance = info[7];
+            loyaltyPoints = info[6];
+         } 
+            else{
+                  throw new Error('Unexpected data format from server') }    
+                }
+                catch (error) {
+                console.error(error);
+                alert('Unexpected error occurred. Please try again.');
+              }
+          }
+
+        function updateData(sheet,condCol,condVal,updCol,updVal) {
+                makeRequest({
+                action: 'update',
+                sheet: sheet,
+                condition: JSON.stringify({column: condCol, value: condVal}),
+                updateValues: JSON.stringify({column: updCol, value: updVal})
+        });}
+
+
+        //get the rt points , add or subs based on game
+        //after everything, set it back as rt
+        function giveReward(){
+            //Set current point as rt points
+            //same for accBalance to rt accBalance [rt = realtime]
+            if(Number(counter) == 10){
+                return;
+            } else{
+            updateData("Portforlio","UserID",uname, "Loyal Points", loyaltyPoints);
+            updateData("Portforlio","UserID",uname, "Account", accBalance);
+            console.log("here give");
+            }
+        }
+window.onload = function() {
+    // Parse the URL to get the username
+    const urlParams = new URLSearchParams(window.location.search);
+    const username = urlParams.get('username');
+    
+    if (username) {
+        // Decode the username to handle special characters
+        const decodedUsername = decodeURIComponent(username);
+        uname = decodedUsername;
+        handlePort();chkDate();
+        const encodedUsername = encodeURIComponent(uname);
+        var extension = `?username=${encodedUsername}`;
+        setTimeout(updateLoyaltyPoints(),5000);
+        
+    } else {
+        console.log('No user found. Please sign up.');
+        window.location.href = `../signup.html`;
+    }
+}
+spinButton.addEventListener('click', ()=>{setTimeout(giveReward(),3000)});
+//find a proper event to give rewards, since this method is lagging.
+    </script>
+</body>
+</html>

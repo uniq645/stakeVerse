@@ -1,0 +1,312 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Games - Gamified Staking</title>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Orbitron:wght@700&family=Roboto:wght@300;400;700&family=Rajdhani:wght@400;700&display=swap');
+
+        :root {
+            --background-color: #0a0e17;
+            --card-color: #1a1f2e;
+            --text-color: #e0e0e0;
+            --accent-gold: #ebd34c;
+            --accent-blue: #4a90e2;
+        }
+
+        body {
+            font-family: 'Rajdhani', sans-serif;
+            background-color: var(--background-color);
+            color: var(--text-color);
+            margin: 0;
+            padding: 0;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .navbar {
+            position: fixed;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            background: linear-gradient(135deg, #111, #000);
+            padding: 10px 0;
+            display: flex;
+            justify-content: space-around;
+            align-items: center;
+            box-shadow: 0 -2px 10px rgba(0, 0, 0, 0.5);
+            z-index: 1000;
+        }
+
+        .nav-item {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            text-decoration: none;
+            color: #555;
+            transition: all 0.3s ease;
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+            position: relative;
+        }
+
+        .nav-item:hover, .nav-item.active {
+            color: #00f5d4;
+            transform: translateY(-5px);
+        }
+
+        .nav-item svg {
+            width: 24px;
+            height: 24px;
+            fill: currentColor;
+        }
+
+        .glow {
+            position: absolute;
+            width: 40px;
+            height: 3px;
+            background: linear-gradient(90deg, transparent, #00f5d4, transparent);
+            bottom: -5px;
+            transition: all 0.3s ease;
+            border-radius: 3px;
+        }
+
+        .container {
+            width: 90%;
+            max-width: 1200px;
+            margin-bottom: 90px;
+        }
+
+        h1 {
+            font-family: 'Orbitron', sans-serif;
+            font-size: 3rem;
+            text-align: center;
+            color: var(--accent-gold);
+            text-shadow: 0 0 10px rgba(255, 215, 0, 0.5);
+            margin-bottom: 2rem;
+        }
+
+        .games-showcase {
+            display: flex;
+            justify-content: space-around;
+            flex-wrap: wrap;
+            gap: 2rem;
+        }
+
+        .game-card {
+            background-color: var(--card-color);
+            border-radius: 15px;
+            overflow: hidden;
+            width: 300px;
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+            position: relative;
+        }
+
+        .game-card:hover {
+            transform: translateY(-10px) rotate(3deg);
+            box-shadow: 0 10px 20px rgba(74, 144, 226, 0.3);
+        }
+
+        .game-image {
+            width: 100%;
+            height: 200px;
+            object-fit: cover;
+            border-bottom: 3px solid var(--accent-blue);
+        }
+
+        .game-info {
+            padding: 1.5rem;
+        }
+
+        .game-title {
+            font-family: 'Roboto', sans-serif;
+            font-size: 1.5rem;
+            font-weight: 700;
+            margin: 0 0 1rem;
+            color: var(--accent-gold);
+        }
+
+        .game-description {
+            font-size: 1rem;
+            line-height: 1.5;
+            margin-bottom: 1rem;
+        }
+
+        .game-cta {
+            display: inline-block;
+            background-color: var(--accent-blue);
+            color: var(--text-color);
+            padding: 0.5rem 1rem;
+            border-radius: 25px;
+            text-decoration: none;
+            font-weight: bold;
+            transition: background-color 0.3s ease, transform 0.3s ease;
+        }
+
+        .game-cta:hover {
+            background-color: var(--accent-gold);
+            color: var(--background-color);
+            transform: scale(1.05);
+        }
+
+        @keyframes pulse {
+            0% { transform: scale(1); }
+            50% { transform: scale(1.05); }
+            100% { transform: scale(1); }
+        }
+
+        .pulse {
+            animation: pulse 2s infinite;
+        }
+
+        /* Mobile Optimization */
+@media (max-width: 768px) {
+    .games-showcase {
+        flex-direction: column;
+        align-items: center;
+        gap: 1rem; /* Adjusted gap for mobile */
+    }
+
+    .game-card {
+        width: 90%; /* Full width on mobile */
+        max-width: 300px; /* Limit max width */
+    }
+
+    h1 {
+        font-size: 2.5rem; /* Reduced font size for mobile */
+    }
+
+    .game-title {
+        font-size: 1.3rem; /* Smaller title for mobile */
+    }
+
+    .game-description {
+        font-size: 0.9rem; /* Smaller description for mobile */
+    }
+}
+
+@media (max-width: 480px) {
+    h1 {
+        font-size: 2rem; /* Further reduced font size */
+    }
+
+    .game-title {
+        font-size: 1.2rem; /* Further reduced title size */
+    }
+
+    .game-cta {
+        padding: 0.4rem 0.8rem; /* Adjusted padding for buttons */
+    }
+}
+        
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1 class="pulse">Featured Games</h1>
+        <div class="games-showcase">
+            <div class="game-card">
+                <img src="./assets/_unoptim/card_clash.jpeg" alt="card matching game" class="game-image">
+                <div class="game-info">
+                    <h2 class="game-title">Card Clash</h2>
+                    <p class="game-description">Flip the cards and reveal vibrant images, racing against the clock to find matching pairs. 
+                        Each successful match sharpens your memory skills and boosts your score. Can you remember the locations and conquer the challenge before time runs out?
+                    </p>
+                    <a href="./mini/memory2/index.html" class="game-cta">Play Now</a>
+                </div>
+            </div>
+            <div class="game-card">
+                <img src="./assets/_unoptim/gold_rush.jpeg" alt="gold rush" class="game-image">
+                <div class="game-info">
+                    <h2 class="game-title">Gold Rush</h2>
+                    <p class="game-description">
+                        Cosmic coins rain down from the stars, and it's up to you to catch them before they vanish into the void. 
+                        As a fearless space miner, tap and collect as many coins as possible. Beware of the reds who disguise themselves as gold. 
+                    </p>
+                    <a href="./mini/tapper.html" class="game-cta">Play Now</a>
+                </div>
+            </div>
+            <div class="game-card">
+                <img src="./assets/_unoptim/trivia_showdown.jpeg" alt="trivia showdown" class="game-image">
+                <div class="game-info">
+                    <h2 class="game-title">Tech Titans: Trivia Showdown</h2>
+                    <p class="game-description">Test your knowledge against the brightest minds in technology and general trivia. 
+                        As you answer questions ranging from IT innovations to pop culture phenomena, climb the leaderboard and earn your place among the titans.
+                        </p>
+                    <a href="./mini/trivia.html" class="game-cta">Play Now</a>
+                </div>
+            </div>
+        </div>
+        <nav class="navbar">
+            <a href="./home.html" class="nav-item active" data-index="0">
+                <svg viewBox="0 0 24 24"><path d="M3 13h1v7c0 1.103.897 2 2 2h12c1.103 0 2-.897 2-2v-7h1a1 1 0 0 0 .707-1.707l-9-9a.999.999 0 0 0-1.414 0l-9 9A1 1 0 0 0 3 13zm9-8.586 6 6V15l.001 5H6v-9.586l6-6z"/><path d="M12 18c3.703 0 4.901-3.539 4.95-3.689l-1.9-.621c-.008.023-.781 2.31-3.05 2.31-2.238 0-3.02-2.221-3.051-2.316l-1.899.627C7.099 14.461 8.297 18 12 18z"/></svg>
+            </a>
+            <a href="./Earnings.html" class="nav-item" data-index="1">
+                <svg viewBox="0 0 24 24"><path d="M12 6C7.03 6 2 7.546 2 10.5v4C2 17.454 7.03 19 12 19s10-1.546 10-4.5v-4C22 7.546 16.97 6 12 6zm-8 8.5v-1.197a9.989 9.989 0 0 0 2 .86v1.881c-1.312-.514-2-1.126-2-1.544zm12 2.914v-1.96c2.446-.124 4-.66 4-1.454v-1.197a9.989 9.989 0 0 0 2 .86v1.881c0 1.19-2.638 1.989-6 1.87zm-6-4.72c-3.14 0-6-1.033-6-1.694 0-.661 2.86-1.694 6-1.694s6 1.033 6 1.694c0 .661-2.86 1.694-6 1.694z"/></svg>
+            </a>
+            <a href="./neotask.html" class="nav-item" data-index="2">
+                <svg viewBox="0 0 24 24"><path d="M22 5.18 10.59 16.6l-4.24-4.24 1.41-1.41 2.83 2.83 10-10L22 5.18zM12 20c-4.41 0-8-3.59-8-8s3.59-8 8-8c1.57 0 3.04.46 4.28 1.25l1.44-1.44C16.1 2.67 14.13 2 12 2 6.48 2 2 6.48 2 12s4.48 10 10 10c1.73 0 3.36-.44 4.78-1.22l-1.5-1.5c-1 .46-2.11.72-3.28.72zm7-5h-3v2h3v3h2v-3h3v-2h-3v-3h-2v3z"/></svg>
+            </a>
+            <a href="./refferal.html" class="nav-item" data-index="3">
+                <svg viewBox="0 0 24 24"><path d="M16 11c1.66 0 2.99-1.34 2.99-3S17.66 5 16 5c-1.66 0-3 1.34-3 3s1.34 3 3 3zm-8 0c1.66 0 2.99-1.34 2.99-3S9.66 5 8 5C6.34 5 5 6.34 5 8s1.34 3 3 3zm0 2c-2.33 0-7 1.17-7 3.5V19h14v-2.5c0-2.33-4.67-3.5-7-3.5zm8 0c-.29 0-.62.02-.97.05 1.16.84 1.97 1.97 1.97 3.45V19h6v-2.5c0-2.33-4.67-3.5-7-3.5z"/></svg>
+            </a>
+            <a href="./Account.html" class="nav-item" data-index="4">
+                <svg viewBox="0 0 24 24"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm0 3c1.66 0 3 1.34 3 3s-1.34 3-3 3-3-1.34-3-3 1.34-3 3-3zm0 14.2c-2.5 0-4.71-1.28-6-3.22.03-1.99 4-3.08 6-3.08 1.99 0 5.97 1.09 6 3.08-1.29 1.94-3.5 3.22-6 3.22z"/></svg>
+            </a>
+            <a href="./Games.html" class="nav-item" data-index="5">
+                <svg viewBox="0 0 24 24"><path d="M21 6H3c-1.1 0-2 .9-2 2v8c0 1.1.9 2 2 2h18c1.1 0 2-.9 2-2V8c0-1.1-.9-2-2-2zm-10 7H8v3H6v-3H3v-2h3V8h2v3h3v2zm4.5 2c-.83 0-1.5-.67-1.5-1.5s.67-1.5 1.5-1.5 1.5.67 1.5 1.5-.67 1.5-1.5 1.5zm4-3c-.83 0-1.5-.67-1.5-1.5S18.67 9 19.5 9s1.5.67 1.5 1.5-.67 1.5-1.5 1.5z"/></svg>
+            </a>
+            <div class="glow"></div></nav>
+    </div>
+    <script>
+        const navItems = document.querySelectorAll('.nav-item');
+        const glow = document.querySelector('.glow');
+
+        navItems.forEach(item => {
+            item.addEventListener('click', () => {
+                navItems.forEach(navItem => navItem.classList.remove('active'));
+                item.classList.add('active');
+                const index = item.getAttribute('data-index');
+                glow.style.left = `calc(${index} * (100% / 6) + (100% / 12) - 20px)`;
+            });
+        });
+
+        // seetting up session links
+    window.onload = function() {
+    // Parse the URL to get the username
+    const urlParams = new URLSearchParams(window.location.search);
+    const username = urlParams.get('username');
+    
+    if (username) {
+        // Decode the username to handle special characters
+        const cardLinks = document.getElementsByClassName("game-cta");
+        const decodedUsername = decodeURIComponent(username);
+        uname = decodedUsername;
+        console.log( `Hello, ${decodedUsername}!`);
+        const encodedUsername = encodeURIComponent(uname);
+        var extension = `?username=${encodedUsername}`;
+        navItems.forEach(item => {   
+                let url = item.getAttribute('href');
+                let extURL = url + extension;
+                item.setAttribute("href", extURL);
+            });
+            console.log("here")
+            for(let i=0; i<cardLinks.length;i++){
+            let url = cardLinks[i].getAttribute('href');
+            let extURL = url + extension;
+            cardLinks[i].setAttribute("href", extURL);
+        }
+        
+    } else {
+        console.log('No user found. Please sign up.');
+        window.location.href = `signup.html`;
+    }
+}
+    </script>
+</body>
+</html>

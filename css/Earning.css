@@ -1,0 +1,89 @@
+.booster-box {
+    background-color: #f7f7f7;
+    padding: 10px;
+    border-radius: 10px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+    transition: all 0.3s ease;
+  }
+  
+  .extendContract {
+    text-decoration: underline;
+  }
+  /* Active booster styles */
+  .booster-box.active {
+    border: 1px solid #34c759;
+    box-shadow: 0 0 10px rgba(0, 128, 0, 0.5);
+  }
+  
+  .booster-box.active .booster-name {
+    color: #34c759;
+    font-weight: bold;
+  }
+  
+  
+  .booster-box.active .booster-point {
+    color: #35cf5b;
+    font-size: 18px;
+    animation: pulse 1s infinite;
+  }
+  
+  
+  /* Animation */
+  @keyframes pulse {
+    0% {
+      transform: scale(1);
+    }
+    50% {
+      transform: scale(1.1);
+    }
+    100% {
+      transform: scale(1);
+    }
+  }
+  
+  
+  
+  h2 {
+    color: #00bcd4;
+    text-align: center;
+    margin-bottom: 1.5rem;
+    font-size: 2rem;
+}
+
+.staking-box {
+    background-color: #2c2c2c;
+    border-radius: 8px;
+    overflow: hidden;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+}
+
+#subsTable {
+    width: 100%;
+    border-collapse: collapse;
+}
+
+#subsTable th,
+#subsTable td {
+    padding: 1rem;
+    font-size: 0.82rem;
+    text-align: left;
+    border-bottom: 1px solid #3a3a3a;
+}
+
+#subsTable th {
+    background-color: #333333;
+    color: #00bcd4;
+    font-weight: bold;
+    text-transform: uppercase;
+    font-size: 0.9rem;
+}
+
+#subsTable tbody tr:hover {
+    background-color: #3a3a3a;
+    transition: background-color 0.3s ease;
+}
+
+#subsTable tbody tr:last-child td {
+    border-bottom: none;
+}
+

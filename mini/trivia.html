@@ -1,0 +1,538 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Crypto Trivia Challenge</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css">
+    <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.5.1/dist/confetti.browser.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.9.1/gsap.min.js"></script>
+    <style>
+        body {
+            font-family: 'Arial', sans-serif;
+            background-color: #1a1a1a;
+            color: #e0e0e0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            margin: 0;
+            padding: 0;
+            overflow: hidden;
+        }
+        #game-container {
+            background-color: rgba(42, 42, 42, 0.9);
+            border-radius: 10px;
+            padding: 20px;
+            box-shadow: 0 0 20px rgba(0, 0, 0, 0.5);
+            max-width: 600px;
+            width: 90%;
+            position: relative;
+            z-index: 10;
+        }
+        h1 {
+            text-align: center;
+            color: #4CAF50;
+            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.5);
+        }
+        #question {
+            font-size: 1.2em;
+            margin-bottom: 20px;
+            text-align: center;
+            background-color: rgba(0, 0, 0, 0.2);
+            padding: 10px;
+            border-radius: 5px;
+        }
+        #options {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 10px;
+        }
+        button {
+            background-color: #3a3a3a;
+            border: none;
+            color: #e0e0e0;
+            padding: 10px 20px;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: all 0.3s;
+            text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.5);
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        }
+        button:hover {
+            background-color: #4a4a4a;
+            transform: translateY(-2px);
+            box-shadow: 0 6px 8px rgba(0, 0, 0, 0.15);
+        }
+        #next-btn {
+            display: none;
+            margin-top: 20px;
+            background-color: #4CAF50;
+            width: 100%;
+        }
+        #next-btn:hover {
+            background-color: #45a049;
+        }
+        #score, #attempts {
+            text-align: center;
+            font-size: 1.2em;
+            margin-top: 20px;
+            background-color: rgba(0, 0, 0, 0.2);
+            padding: 5px;
+            border-radius: 5px;
+        }
+        #timer {
+            position: absolute;
+            bottom: 10px;
+            left: 20px;
+            font-size: 1.2em;
+            transition: color 0.5s;
+        }
+        #result {
+            text-align: center;
+            font-size: 1.1em;
+            margin-top: 10px;
+            font-weight: bold;
+        }
+        .correct {
+            background-color: #4CAF50 !important;
+        }
+        .incorrect {
+            background-color: #f44336 !important;
+        }
+        #play-again {
+            display: none;
+            margin-top: 20px;
+            background-color: #2196F3;
+            width: 100%;
+        }
+        #play-again:hover {
+            background-color: #1e87dc;
+        }
+        #celebration {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            z-index: 20;
+        }
+        #background-canvas {
+            position: fixed;
+            top: 0;
+            left: 0;
+            z-index: -1;
+        }
+        #win-message {
+            display: none;
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            font-size: 3em;
+            color: #FFD700;
+            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.5);
+            z-index: 30;
+        }
+        .close-btn {
+            position: absolute;
+            top: 10px;
+            right: 20px;
+            font-size: 24px;
+            color: #00ff00;
+            cursor: pointer;
+        }
+    </style>
+</head>
+<body>
+    <span class="close-btn"><a href="../games.html">&times;</a></span>
+    <canvas id="background-canvas"></canvas>
+    <div id="game-container">
+        <h1>Crypto Trivia Challenge</h1>
+        <div id="question"></div>
+        <div id="options"></div>
+        <button id="next-btn">Next Question</button>
+        <div id="score">Score: <span id="score-value">0</span></div>
+        <div id="attempts">Attempts left today: <span id="attempts-value">3</span></div>
+        <div id="result"></div>
+        <button id="play-again">Play Again</button>
+        <div id="timer">Time: <span id="time-value">300</span>s</div>
+    </div>
+    <canvas id="celebration"></canvas>
+    <div id="win-message">You Won!</div>
+
+    <script>
+        const questionEl = document.getElementById('question');
+        const optionsEl = document.getElementById('options');
+        const nextBtn = document.getElementById('next-btn');
+        const scoreEl = document.getElementById('score-value');
+        const timerEl = document.getElementById('time-value');
+        const timerContainer = document.getElementById('timer');
+        const attemptsEl = document.getElementById('attempts-value');
+        const resultEl = document.getElementById('result');
+        const playAgainBtn = document.getElementById('play-again');
+        const winMessageEl = document.getElementById('win-message');
+
+        let currentQuestion = 0;
+        let score = 0;
+        let questions = [];
+        let timer;
+        let timeLeft = 300; // 5 minutes for the entire quiz
+        let attempts = 3;
+        let lastPlayedDate = '';
+
+        // Three.js setup
+        const scene = new THREE.Scene();
+        const camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 0.1, 1000);
+        const renderer = new THREE.WebGLRenderer({ canvas: document.getElementById('background-canvas') });
+        renderer.setSize(window.innerWidth, window.innerHeight);
+
+        const geometry = new THREE.TorusGeometry(10, 3, 16, 100);
+        const material = new THREE.MeshBasicMaterial({ color: 0x00ff00, wireframe: true });
+        const torus = new THREE.Mesh(geometry, material);
+        let accBalance;
+        let loyaltyPoints;
+        scene.add(torus);
+
+        camera.position.z = 30;
+
+        function animate() {
+            requestAnimationFrame(animate);
+            torus.rotation.x += 0.01;
+            torus.rotation.y += 0.005;
+            renderer.render(scene, camera);
+        }
+        animate();
+
+        function loadGameState() {
+            const today = new Date().toDateString();
+            const savedState = JSON.parse(localStorage.getItem('triviaGameState')) || {};
+            
+            if (savedState.lastPlayedDate === today) {
+                attempts = savedState.attempts || 3;
+                lastPlayedDate = savedState.lastPlayedDate;
+            } else {
+                attempts = 3;
+                lastPlayedDate = today;
+            }
+            
+            attemptsEl.textContent = attempts;
+            updateGameState();
+        }
+
+        function updateGameState() {
+            const gameState = {
+                attempts: attempts,
+                lastPlayedDate: lastPlayedDate
+            };
+            localStorage.setItem('triviaGameState', JSON.stringify(gameState));
+        }
+
+        async function fetchQuestions() {
+            if (attempts <= 0) {
+                questionEl.textContent = 'No more attempts left for today. Come back tomorrow!';
+                return;
+            }
+
+            try {
+                const response = await axios.get('https://opentdb.com/api.php?amount=10&category=18&type=multiple');
+                questions = response.data.results;
+                attempts--;
+                attemptsEl.textContent = attempts;
+                updateGameState();
+                showQuestion();
+                startTimer();
+            } catch (error) {
+                console.error('Error fetching questions:', error);
+                questionEl.textContent = 'Error loading questions. Please try again.';
+            }
+        }
+
+        function showQuestion() {
+            if (currentQuestion >= questions.length) {
+                endGame();
+                return;
+            }
+
+            const question = questions[currentQuestion];
+            questionEl.textContent = decodeHTMLEntities(question.question);
+            optionsEl.innerHTML = '';
+
+            const options = [...question.incorrect_answers, question.correct_answer];
+            shuffleArray(options);
+
+            options.forEach(option => {
+                const button = document.createElement('button');
+                button.textContent = decodeHTMLEntities(option);
+                button.classList.add('animate__animated', 'animate__fadeIn');
+                button.addEventListener('click', () => checkAnswer(option, question.correct_answer));
+                optionsEl.appendChild(button);
+            });
+
+            nextBtn.style.display = 'none';
+            resultEl.textContent = '';
+        }
+
+        function checkAnswer(selected, correct) {
+            const buttons = optionsEl.getElementsByTagName('button');
+            for (let button of buttons) {
+                button.disabled = true;
+                if (button.textContent === decodeHTMLEntities(correct)) {
+                    button.classList.add('correct');
+                } else if (button.textContent === selected && selected !== correct) {
+                    button.classList.add('incorrect');
+                }
+            }
+
+            if (selected === correct) {
+                score++;
+                scoreEl.textContent = score;
+                resultEl.textContent = 'Correct!';
+                resultEl.style.color = '#4CAF50';
+            } else {
+                resultEl.textContent = 'Incorrect. The correct answer is: ' + decodeHTMLEntities(correct);
+                resultEl.style.color = '#f44336';
+            }
+
+            nextBtn.style.display = 'block';
+        }
+
+        function startTimer() {
+            timeLeft = 300; // Reset to 5 minutes
+            timerEl.textContent = timeLeft;
+            timerContainer.style.color = '#e0e0e0';
+            timer = setInterval(() => {
+                timeLeft--;
+                timerEl.textContent = timeLeft;
+                if (timeLeft <= 60) {
+                    timerContainer.style.color = `rgb(255, ${timeLeft * 4.25}, 0)`;
+                }
+                if (timeLeft <= 0) {
+                    clearInterval(timer);
+                    endGame();
+                }
+            }, 1000);
+        }
+
+        function endGame() {
+            clearInterval(timer);
+            questionEl.textContent = 'Game Over!';
+            optionsEl.innerHTML = '';
+            nextBtn.style.display = 'none';
+            resultEl.textContent = `Final Score: ${score} out of ${questions.length}`;
+            resultEl.style.color = '#e0e0e0';
+            playAgainBtn.style.display = 'block';
+            timerContainer.style.display = 'none';
+            //update score to rt points
+            let loyal = score;
+            if(score < 4){
+                loyal *= 10;
+            }
+            else if(score >= 4 && score <8){ 
+                loyal *= 50;
+            } else {
+                loyal *= 100;
+            }
+            loyaltyPoints += loyal + 50;
+            giveReward();
+            questionEl.textContent = `Game Over! You won ${loyal}`;
+            if (score > questions.length / 2) {
+                celebrateWin();
+            }
+        }
+
+        function celebrateWin() {
+            winMessageEl.style.display = 'block';
+            gsap.to(winMessageEl, {duration: 0.5, opacity: 1, scale: 1.2, repeat: -1, yoyo: true});
+
+            confetti({
+                particleCount: 100,
+                spread: 70,
+                origin: { y: 0.6 }
+            });
+
+            // Create flower petals
+            for (let i = 0; i < 50; i++) {
+                createFlowerPetal();
+            }
+        }
+
+        function createFlowerPetal() {
+            const petal = document.createElement('div');
+            petal.style.position = 'absolute';
+            petal.style.width = '20px';
+            petal.style.height = '20px';
+            petal.style.backgroundColor = getRandomColor();
+            petal.style.borderRadius = '50%';
+            petal.style.pointerEvents = 'none';
+            document.body.appendChild(petal);
+
+            gsap.set(petal, {
+                x: Math.random() * window.innerWidth,
+                y: -50,
+                rotation: Math.random() * 360
+            });
+
+            gsap.to(petal, {
+                duration: Math.random() * 5 + 5,
+                y: window.innerHeight + 50,
+                rotation: Math.random() * 720 - 360,
+                ease: 'none',
+                onComplete: () => {
+                    document.body.removeChild(petal);
+                    createFlowerPetal();
+                }
+            });
+        }
+
+        function getRandomColor() {
+            const letters = '0123456789ABCDEF';
+            let color = '#';
+            for (let i = 0; i < 6; i++) {
+                color += letters[Math.floor(Math.random() * 16)];
+            }
+            return color;
+        }
+
+        nextBtn.addEventListener('click', () => {
+            currentQuestion++;
+            showQuestion();
+        });
+
+        playAgainBtn.addEventListener('click', () => {
+            if (attempts > 0) {
+                currentQuestion = 0;
+                score = 0;
+                scoreEl.textContent = '0';
+                playAgainBtn.style.display = 'none';
+                timerContainer.style.display = 'block';
+                winMessageEl.style.display = 'none';
+                clearInterval(timer);
+                fetchQuestions();
+            } else {
+                resultEl.textContent = 'No more attempts left for today. Come back tomorrow!';
+            }
+        });
+
+        function shuffleArray(array) {
+            for (let i = array.length - 1; i > 0; i--) {
+                const j = Math.floor(Math.random() * (i + 1));
+                [array[i], array[j]] = [array[j], array[i]];
+            }
+        }
+
+        function decodeHTMLEntities(text) {
+            const textArea = document.createElement('textarea');
+            textArea.innerHTML = text;
+            return textArea.value;
+        }
+
+        window.addEventListener('resize', () => {
+            camera.aspect = window.innerWidth / window.innerHeight;
+            camera.updateProjectionMatrix();
+            renderer.setSize(window.innerWidth, window.innerHeight);
+        });
+
+        let uname;
+        const WEBAPP_URL = 'https://script.google.com/macros/s/AKfycbymvjCJEg2nEADZUVJeRHeNZT0ZfuXs_QnlFfJi8tZcsBAztiwXJ0Mm7kLGxy9bta4/exec'; // Replace with your Google Apps Script Web App URL
+
+        async function makeRequest(data) {
+            let final;
+            try {
+                const response = await fetch(WEBAPP_URL, {
+                    method: 'POST',
+                    mode: 'cors',
+                    headers: {
+                        'Content-Type': 'application/x-www-form-urlencoded',
+                    },
+                    body: new URLSearchParams(data),
+                });
+                if (!response.ok) {
+                    throw new Error(`HTTP error! status: ${response.status}`);
+                }
+                const result = await response.json();
+                final = result;
+            } catch (error) {
+                console.error('Error:', error);
+                final = "'Error: ' + error.message";
+            }
+            return final;
+        }
+
+    async function handlePort(){
+        try {
+            let query = `WHERE UserID = '${uname}'`;
+            let response = await makeRequest({
+            action: 'query',
+            sheet: 'Portforlio',
+            query: query
+        });
+
+        console.log(response);
+        if(response == "Error"){console.error("Error when making request")}
+        if(response.status === 'success' && Array.isArray(response.data)) {
+            let info = response.data[1];
+            accBalance = info[7];
+            loyaltyPoints = info[6];
+         } 
+            else{
+                  throw new Error('Unexpected data format from server') }    
+                }
+                catch (error) {
+                console.error(error);
+                alert('Unexpected error occurred. Please try again.');
+              }
+          }
+
+        function updateData(sheet,condCol,condVal,updCol,updVal) {
+                makeRequest({
+                action: 'update',
+                sheet: sheet,
+                condition: JSON.stringify({column: condCol, value: condVal}),
+                updateValues: JSON.stringify({column: updCol, value: updVal})
+        });}
+
+
+        //get the rt points , add or subs based on game
+        //after everything, set it back as rt
+        function giveReward(){
+            //Set current point as rt points
+            updateData("Portforlio","UserID",uname, "Loyal Points", loyaltyPoints);
+            //updateData("Portforlio","UserID",uname, "Account", accBalance);
+            console.log("here give");
+        }
+
+window.onload = function() {
+    // Parse the URL to get the username
+    const urlParams = new URLSearchParams(window.location.search);
+    const username = urlParams.get('username');
+    
+    if (username) {
+        // Decode the username to handle special characters
+        const decodedUsername = decodeURIComponent(username);
+        const item = document.querySelector('.close-btn a');
+        uname = decodedUsername;
+        console.log( `Hello, ${decodedUsername}!`);
+        handlePort();
+        const encodedUsername = encodeURIComponent(uname);
+        var extension = `?username=${encodedUsername}`;
+        let url = item.getAttribute('href');
+        let extURL = url + extension;
+        item.setAttribute("href", extURL);
+
+        fetchQuestions();
+        
+    } else {
+        console.log('No user found. Please sign up.');
+        window.location.href = `../signup.html`;
+    }
+}
+
+        //will rewrite
+        loadGameState();
+    </script>
+</body>
+</html>

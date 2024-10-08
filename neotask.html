@@ -1,0 +1,394 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Tasks - Gamified Staking</title>
+    
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700&family=Roboto:wght@300;400;700&display=swap');
+
+        body {
+            font-family: 'Roboto', sans-serif;
+            background-color: #0a0e17;
+            color: #e0e0e0;
+            margin: 0;
+            padding: 0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            overflow-x: hidden;
+        }
+
+        .container {
+            max-width: 800px;
+            width: 90%;
+            background-color: #161b2b;
+            border-radius: 20px;
+            padding: 2rem;
+            box-shadow: 0 0 20px rgba(38, 35, 214, 0.308);
+            border-radius: 80px 80px 0 0;
+        }
+
+        .navbar {
+            position: fixed;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            background: linear-gradient(135deg, #111, #000);
+            padding: 10px 0;
+            display: none;
+            justify-content: space-around;
+            align-items: center;
+            box-shadow: 0 -2px 10px rgba(0, 0, 0, 0.5);
+            z-index: 1000;
+        }
+
+        .nav-item {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            text-decoration: none;
+            color: #555;
+            transition: all 0.3s ease;
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+            position: relative;
+        }
+
+        .nav-item:hover, .nav-item.active {
+            color: #00f5d4;
+            transform: translateY(-5px);
+        }
+
+        .nav-item svg {
+            width: 24px;
+            height: 24px;
+            fill: currentColor;
+        }
+
+        .glow {
+            position: absolute;
+            width: 40px;
+            height: 3px;
+            background: linear-gradient(90deg, transparent, #00f5d4, transparent);
+            bottom: -5px;
+            transition: all 0.3s ease;
+            border-radius: 3px;
+        }
+
+        h1, h2, .points-display {
+            font-family: 'Orbitron', sans-serif;
+        }
+
+        h1 {
+            text-align: center;
+            color: #00ffff;
+            font-size: 2.5rem;
+            margin-bottom: 2rem;
+            text-shadow: 0 0 10px rgba(0, 255, 255, 0.5);
+        }
+
+        .points-display {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            margin-bottom: 2rem;
+            font-size: 1.5rem;
+        }
+
+        .loyalty-symbol {
+            font-size: 2rem;
+            margin-right: 0.5rem;
+            color: #ffd700;
+            text-shadow: 0 0 10px rgba(255, 215, 0, 0.5);
+        }
+
+        .tasks-list {
+            display: grid;
+            gap: 1rem;
+            margin-bottom: 10%;
+        }
+
+        .task-item {
+            background-color: #2a3654;
+            border-radius: 10px;
+            padding: 1rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+        }
+
+        .task-item:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 5px 15px rgba(0, 255, 255, 0.3);
+        }
+
+        .task-info {
+            flex-grow: 1;
+        }
+
+        .task-name {
+            font-family: 'Orbitron', sans-serif;
+            font-weight: bold;
+            margin-bottom: 0.5rem;
+        }
+
+        .task-description {
+            font-size: 0.9rem;
+            opacity: 0.8;
+        }
+
+        .task-points {
+            font-family: 'Orbitron', sans-serif;
+            background: linear-gradient(90deg, #00ffff, #ff00ff);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            font-weight: bold;
+            font-size: 1.2rem;
+            margin-left: 1rem;
+        }
+
+        .task-button {
+            font-family: 'Roboto', sans-serif;
+            background: linear-gradient(90deg, #00ffff, #ff00ff);
+            border: none;
+            border-radius: 5px;
+            color: #0a0e17;
+            font-size: 1rem;
+            font-weight: bold;
+            padding: 0.5rem 1rem;
+            cursor: pointer;
+            transition: transform 0.3s ease;
+        }
+
+        .task-button:hover {
+            transform: scale(1.05);
+        }
+
+        .task-button:disabled {
+            background: #4a4a4a;
+            cursor: not-allowed;
+        }
+
+        .task-cooldown {
+            font-size: 0.8rem;
+            color: #ff00ff;
+            margin-top: 0.5rem;
+        }
+
+        .verification-modal {
+            display: none;
+            position: fixed;
+            z-index: 1;
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.5);
+        }
+
+        .modal-content {
+            background-color: #2a3654;
+            margin: 15% auto;
+            padding: 20px;
+            border-radius: 10px;
+            width: 80%;
+            max-width: 500px;
+            text-align: center;
+        }
+
+        .close-modal {
+            color: #aaa;
+            float: right;
+            font-size: 28px;
+            font-weight: bold;
+            cursor: pointer;
+        }
+
+        .close-modal:hover,
+        .close-modal:focus {
+            color: #fff;
+            text-decoration: none;
+            cursor: pointer;
+        }
+
+        @keyframes float {
+            0% { transform: translateY(0px); }
+            50% { transform: translateY(-10px); }
+            100% { transform: translateY(0px); }
+        }
+
+        .floating {
+            animation: float 3s ease-in-out infinite;
+        }
+
+        @keyframes pulse {
+            0% { transform: scale(1); }
+            50% { transform: scale(1.05); }
+            100% { transform: scale(1); }
+        }
+
+        .pulsing {
+            animation: pulse 2s ease-in-out infinite;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1 class="floating">Tasks</h1>
+        <div class="points-display">
+        </div>
+        <div class="tasks-list" id="tasks-list">
+            <!-- Tasks will be dynamically added here -->
+        </div>
+    </div>
+
+    <div id="verification-modal" class="verification-modal">
+        <div class="modal-content">
+            <span class="close-modal">&times;</span>
+            <h2>Verify Task Completion (Be Honest)</h2>
+            <p>Please provide proof of task completion:</p>
+            <input type="text" id="verification-input" placeholder="Enter code or UID(Depends on task)">
+            <button id="submit-verification" class="task-button">Submit</button>
+        </div>
+    </div>
+
+    <nav class="navbar">
+        <a href="./home.html" class="nav-item active" data-index="0">
+            <svg viewBox="0 0 24 24"><path d="M3 13h1v7c0 1.103.897 2 2 2h12c1.103 0 2-.897 2-2v-7h1a1 1 0 0 0 .707-1.707l-9-9a.999.999 0 0 0-1.414 0l-9 9A1 1 0 0 0 3 13zm9-8.586 6 6V15l.001 5H6v-9.586l6-6z"/><path d="M12 18c3.703 0 4.901-3.539 4.95-3.689l-1.9-.621c-.008.023-.781 2.31-3.05 2.31-2.238 0-3.02-2.221-3.051-2.316l-1.899.627C7.099 14.461 8.297 18 12 18z"/></svg>
+        </a>
+        <a href="./Earnings.html" class="nav-item" data-index="1">
+            <svg viewBox="0 0 24 24"><path d="M12 6C7.03 6 2 7.546 2 10.5v4C2 17.454 7.03 19 12 19s10-1.546 10-4.5v-4C22 7.546 16.97 6 12 6zm-8 8.5v-1.197a9.989 9.989 0 0 0 2 .86v1.881c-1.312-.514-2-1.126-2-1.544zm12 2.914v-1.96c2.446-.124 4-.66 4-1.454v-1.197a9.989 9.989 0 0 0 2 .86v1.881c0 1.19-2.638 1.989-6 1.87zm-6-4.72c-3.14 0-6-1.033-6-1.694 0-.661 2.86-1.694 6-1.694s6 1.033 6 1.694c0 .661-2.86 1.694-6 1.694z"/></svg>
+        </a>
+        <a href="./neotask.html" class="nav-item" data-index="2">
+            <svg viewBox="0 0 24 24"><path d="M22 5.18 10.59 16.6l-4.24-4.24 1.41-1.41 2.83 2.83 10-10L22 5.18zM12 20c-4.41 0-8-3.59-8-8s3.59-8 8-8c1.57 0 3.04.46 4.28 1.25l1.44-1.44C16.1 2.67 14.13 2 12 2 6.48 2 2 6.48 2 12s4.48 10 10 10c1.73 0 3.36-.44 4.78-1.22l-1.5-1.5c-1 .46-2.11.72-3.28.72zm7-5h-3v2h3v3h2v-3h3v-2h-3v-3h-2v3z"/></svg>
+        </a>
+        <a href="./refferal.html" class="nav-item" data-index="3">
+            <svg viewBox="0 0 24 24"><path d="M16 11c1.66 0 2.99-1.34 2.99-3S17.66 5 16 5c-1.66 0-3 1.34-3 3s1.34 3 3 3zm-8 0c1.66 0 2.99-1.34 2.99-3S9.66 5 8 5C6.34 5 5 6.34 5 8s1.34 3 3 3zm0 2c-2.33 0-7 1.17-7 3.5V19h14v-2.5c0-2.33-4.67-3.5-7-3.5zm8 0c-.29 0-.62.02-.97.05 1.16.84 1.97 1.97 1.97 3.45V19h6v-2.5c0-2.33-4.67-3.5-7-3.5z"/></svg>
+        </a>
+        <a href="./Account.html" class="nav-item" data-index="4">
+            <svg viewBox="0 0 24 24"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm0 3c1.66 0 3 1.34 3 3s-1.34 3-3 3-3-1.34-3-3 1.34-3 3-3zm0 14.2c-2.5 0-4.71-1.28-6-3.22.03-1.99 4-3.08 6-3.08 1.99 0 5.97 1.09 6 3.08-1.29 1.94-3.5 3.22-6 3.22z"/></svg>
+        </a>
+        <a href="./Games.html" class="nav-item" data-index="5">
+            <svg viewBox="0 0 24 24"><path d="M21 6H3c-1.1 0-2 .9-2 2v8c0 1.1.9 2 2 2h18c1.1 0 2-.9 2-2V8c0-1.1-.9-2-2-2zm-10 7H8v3H6v-3H3v-2h3V8h2v3h3v2zm4.5 2c-.83 0-1.5-.67-1.5-1.5s.67-1.5 1.5-1.5 1.5.67 1.5 1.5-.67 1.5-1.5 1.5zm4-3c-.83 0-1.5-.67-1.5-1.5S18.67 9 19.5 9s1.5.67 1.5 1.5-.67 1.5-1.5 1.5z"/></svg>
+        </a>
+        <div class="glow"></div>
+    </nav>
+    <script src="./js/task.js" defer></script>
+    <script>
+        const tasksList = document.getElementById('tasks-list');
+const pointsValue = document.getElementById('points-value');
+const modal = document.getElementById('verification-modal');
+const closeModal = document.getElementsByClassName('close-modal')[0];
+const verificationInput = document.getElementById('verification-input');
+const submitVerification = document.getElementById('submit-verification');
+
+let currentTask = null;
+let taskCompletionTimes = JSON.parse(localStorage.getItem('taskCompletionTimes')) || {};
+
+
+const navItems = document.querySelectorAll('.nav-item');
+    const glow = document.querySelector('.glow');
+
+        navItems.forEach(item => {
+            item.addEventListener('click', () => {
+                navItems.forEach(navItem => navItem.classList.remove('active'));
+                item.classList.add('active');
+                const index = item.getAttribute('data-index');
+                glow.style.left = `calc(${index} * (100% / 6) + (100% / 12) - 20px)`;
+            });
+        });
+
+
+function createTaskElement(task) {
+    const taskElement = document.createElement('div');
+    taskElement.className = 'task-item';
+    taskElement.innerHTML = `
+        <div class="task-info">
+            <div class="task-name">${task.name}</div>
+            <div class="task-description">${task.desc}</div>
+            <div class="task-cooldown" id="cooldown-${task.id}"></div>
+        </div>
+        <div class="task-points">+${task.points}</div>
+        <button class="task-button" id="button-${task.id}">Complete</button>
+    `;
+
+    const completeButton = taskElement.querySelector('.task-button');
+    completeButton.addEventListener('click', () => {
+        currentTask = task;
+        modal.style.display = 'block';
+    });
+
+    return taskElement;
+}
+
+function populateTasks(tasks) {
+    tasksList.innerHTML = ''; // Clear existing tasks
+    tasks.forEach(task => {
+        const taskElement = createTaskElement(task);
+        tasksList.appendChild(taskElement);
+        updateTaskStatus(task);
+    });
+}
+
+function updateTaskStatus(task) {
+    const button = document.getElementById(`button-${task.id}`);
+    const cooldownElement = document.getElementById(`cooldown-${task.id}`);
+    const lastCompletionTime = taskCompletionTimes[task.id];
+
+    if (lastCompletionTime) {
+        const timeSinceCompletion = Date.now() - lastCompletionTime;
+        const cooldownTime = task.cooldown * 60 * 1000; // Convert minutes to milliseconds
+
+        if (timeSinceCompletion < cooldownTime) {
+            const remainingTime = cooldownTime - timeSinceCompletion;
+            const hours = Math.floor(remainingTime / (60 * 60 * 1000));
+            const minutes = Math.floor((remainingTime % (60 * 60 * 1000)) / (60 * 1000));
+
+            button.disabled = true;
+            cooldownElement.textContent = `Available in ${hours}h ${minutes}m`;
+
+            setTimeout(() => updateTaskStatus(task), 60000); // Update every minute
+        } else {
+            button.disabled = false;
+            cooldownElement.textContent = '';
+            delete taskCompletionTimes[task.id];
+            localStorage.setItem('taskCompletionTimes', JSON.stringify(taskCompletionTimes));
+        }
+    } else {
+        button.disabled = false;
+        cooldownElement.textContent = '';
+    }
+}
+
+closeModal.onclick = function() {
+    modal.style.display = 'none';
+    verificationInput.value = '';
+}
+
+window.onclick = function(event) {
+    if (event.target == modal) {
+        modal.style.display = 'none';
+        verificationInput.value = '';
+    }
+}
+
+
+// Example tasks with different cooldown times
+
+
+// Initialize tasks and update their status
+function initializeTasks() {
+    populateTasks(tasks);
+    tasks.forEach(updateTaskStatus);
+}
+
+// Call this function when the page loads
+window.onload = initializeTasks;
+    </script>
+</body>
+</html>
