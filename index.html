@@ -1,0 +1,555 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>StakeSimple - Simplified Crypto Staking with Higher Yields</title>
+    <link href="https://unpkg.com/aos@2.3.1/dist/aos.css" rel="stylesheet">
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;700&display=swap');
+
+        @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;700&display=swap');
+
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    font-family: 'Poppins', sans-serif;
+    background-color: #f4faff; /* Light background for contrast */
+    color: #333333;
+    line-height: 1.6;
+}
+
+
+header {
+    background-color: #ffffff;
+    padding: 20px 0;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+}
+
+nav {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.logo img {
+    max-width: 170px; /* Ensure logo fits well */
+}
+
+.nav-links a {
+    color: #0077be;
+    text-decoration: none;
+    margin-left: 40px;
+    font-weight: 600;
+    font-size: 15px;
+    transition: color 0.3s ease;
+}
+
+.nav-links a:hover {
+    color: #005c8f; /* Darker hover color */
+    border-style: inset;
+}
+
+.hero {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 120px 20px; /* Increased padding for spacious feel */
+    background: linear-gradient(105deg, #0597bb, #8a2be2);
+    background-size: 200% 200%; 
+    height:500px;
+    animation: gradientAnimation 5s ease infinite;
+    color: #ffffff; /* White text for contrast */
+}
+
+@keyframes gradientAnimation {
+    0% {
+        background-position: 0% 50%;
+    }
+    50% {
+        background-position: 100% 50%;
+    }
+    100% {
+        background-position: 0% 50%;
+    }
+}
+
+.hero-content {
+    max-width: 50%;
+}
+
+h1 {
+    font-size: 48px;
+    font-weight: 700;
+    margin-bottom: 20px;
+    line-height: 1.2;
+    
+}
+
+p {
+    font-size: 18px;
+    margin-bottom: 30px;
+}
+
+.cta-button {
+    display: inline-block;
+    background-color: #ff9800; /* Bright accent color */
+    color: #030303;
+    padding: 15px 35px;
+    border-radius: 25px;
+    text-decoration: none;
+    font-weight: 600;
+    transition: background-color 0.3s ease;
+}
+
+.cta-button:hover {
+    background-color: #e68a00; /* Darker shade on hover */
+}
+
+.hero-image {
+    max-width: 45%;
+}
+
+.features, .how-it-works, .trusted-by {
+    padding: 80px 20px;
+}
+
+.features {
+    background-color: #dbdfe2; /* Soft background color */
+}
+
+.features-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 40px;
+}
+
+.feature-card {
+    background-color: #f0e6fd;
+    border-radius: 15px;
+    padding: 40px;
+    text-align: center;
+    box-shadow: 0 6px 12px rgba(68, 12, 94, 0.637);
+    transition: transform 0.3s;
+}
+
+.feature-card:hover {
+    transform: translateY(-5px); /* Lift effect on hover */
+}
+
+.feature-icon {
+    font-size: 48px;
+    color: #0077be; /* Icon color */
+    margin-bottom: 20px;
+}
+
+h2 {
+    font-size: 36px;
+    margin-bottom: 40px;
+    text-align: center;
+    color: #005c8f
+}
+
+h3 {
+    font-size: 24px;
+    margin-bottom: 15px;
+    color: #0077be;
+}
+
+.how-it-works-steps {
+    display: flex;
+    justify-content: space-between;
+    margin-top: 60px;
+}
+
+.step {
+    flex-basis: 22%;
+    text-align: center;
+    padding: 20px; /* Added padding for better spacing */
+    background-color: #ffffff; /* Card background */
+    border-radius: 10px;
+    box-shadow: 0 6px 12px rgba(68, 12, 94, 0.637);
+}
+
+.step-number {
+    display: inline-block;
+    width: 50px; /* Increased size for visibility */
+    height: 50px;
+    background-color: #0077be;
+    color: #ffffff;
+    border-radius: 50%;
+    font-size: 24px;
+    font-weight: bold;
+    line-height: 50px;
+    margin-bottom: 20px;
+}
+
+.trusted-by {
+    background-color: #e0f7fa;
+    text-align: center;
+}
+
+.stats {
+    display: flex;
+    justify-content: space-around;
+    margin-top: 40px;
+}
+
+.stat {
+    font-size: 36px;
+    font-weight: bold;
+    color: #0077be;
+}
+
+.stat-label {
+    font-size: 18px;
+    color: #333333;
+}
+
+footer {
+    background-color: #333333;
+    color: #ffffff;
+    padding: 40px 20px;
+    text-align: center;
+}
+
+footer .social-links {
+    margin-top: 20px;
+}
+
+footer .newsletter-signup {
+    margin-top: 20px;
+}
+
+footer input[type="email"] {
+    padding: 10px;
+    border: none;
+    border-radius: 5px;
+    margin-right: 10px;
+}
+
+footer button {
+    background-color: #ff9800;
+    color: #ffffff;
+    padding: 10px 20px;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+}
+
+footer button:hover {
+    background-color: #e68a00; /* Button hover effect */
+}
+
+@media (max-width: 768px) {
+    .hero {
+        flex-direction: column;
+        text-align: center;
+    }
+
+    .hero-content, .hero-image {
+        max-width: 100%;
+    }
+
+    .hero-image {
+        margin-top: 40px;
+    }
+
+    .features-grid {
+        grid-template-columns: 1fr;
+    }
+
+    .how-it-works-steps {
+        flex-direction: column;
+    }
+
+    .step {
+        margin-bottom: 40px;
+    }
+
+    .nav-links {
+        flex-direction: column; /* Stack navigation links for mobile */
+        align-items: center;
+    }
+
+    .nav-links a {
+        margin: 10px 0; /* Spacing for stacked links */
+    }
+}
+
+.testimonials {
+    padding: 80px 20px;
+    background-color: #f8f9fa;
+    text-align: center;
+}
+
+.testimonial-slider {
+    position: relative;
+    overflow: hidden;
+}
+
+.testimonial-card {
+    background-color: #ffffff;
+    border-radius: 15px;
+    padding: 30px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    margin: 0 auto;
+    max-width: 400px;
+    transition: transform 0.3s ease;
+    display: none; /* Hide all cards by default */
+}
+
+.user-image {
+    border-radius: 50%;
+    margin-bottom: 15px;
+}
+
+.testimonial-text {
+    font-style: italic;
+    margin: 15px 0;
+}
+
+.user-info {
+    margin-bottom: 10px;
+}
+
+.user-name {
+    font-weight: bold;
+    display: block;
+}
+
+.user-role {
+    font-size: 14px;
+    color: #777;
+}
+
+.star-rating {
+    color: #ff9800; /* Yellow for stars */
+    font-size: 20px;
+}
+
+.slider-controls {
+    position: relative;
+    margin-top: 20px; /* Add some space above the buttons */
+}
+
+.slider-button {
+    background-color: rgba(255, 255, 255, 0.8);
+    border: none;
+    border-radius: 50%;
+    cursor: pointer;
+    padding: 10px;
+    font-size: 18px;
+    margin: 0 10px; /* Space between buttons */
+    transition: background-color 0.3s ease;
+}
+
+.slider-button:hover {
+    background-color: rgba(255, 255, 255, 1); /* Change color on hover */
+}
+
+.prev {
+    float: left; /* Align to the left */
+}
+
+.next {
+    float: right; /* Align to the right */
+}
+
+/* Clear floats after the buttons */
+.slider-controls::after {
+    content: '';
+    display: table;
+    clear: both;
+}
+
+/* Mobile styles */
+@media (max-width: 768px) {
+    .testimonial-card {
+        max-width: 90%; /* Make cards wider on mobile */
+    }
+    
+    .slider-button {
+        padding: 8px;
+        font-size: 16px; /* Smaller button font size */
+    }
+    
+    .slider-controls {
+        margin-top: 15px; /* Less margin on mobile */
+    }
+}  </style>
+</head>
+<body>
+    <header>
+        <div class="container">
+            <nav>
+                <div class="logo"><img src="./assets/logo.png" alt="StakeVerse LOGO" width="170px" height="50px"></div>
+                <div class="nav-links">
+                    <a href="./signup.html">Sign Up</a>
+                    <a href="#how">How It Works</a>
+                </div>
+            </nav>
+        </div>
+    </header>
+
+    <main>
+        <section class="hero">
+            <div class="container">
+                <div class="hero-content" data-aos="fade-right">
+                    <h1>Simplify Staking, Maximize Yields</h1>
+                    <p>StakeVerse revolutionizes crypto staking with higher yields through multi-asset arbitrage and web3 integration. Start earning more from your digital assets today!</p>
+                    <a href="./signup.html" class="cta-button">Start Staking</a>
+                </div>
+            </div>
+        </section>
+        <section id="features" class="features">
+            <div class="container">
+                <h2>Why Choose StakeVerse</h2>
+                <div class="features-grid">
+                    <div class="feature-card" data-aos="fade-up" data-aos-delay="100">
+                        <div class="feature-icon">🚀</div>
+                        <h3>Higher Yields</h3>
+                        <p>Earn up to 550% more on your staked assets through our advanced arbitrage strategies.</p>
+                    </div>
+                    <div class="feature-card" data-aos="fade-up" data-aos-delay="200">
+                        <div class="feature-icon">🔄</div>
+                        <h3>Multi-Asset Support</h3>
+                        <p>Stake and earn rewards on a wide range of cryptocurrencies and tokens.</p>
+                    </div>
+                    <div class="feature-card" data-aos="fade-up" data-aos-delay="300">
+                        <div class="feature-icon">🛡️</div>
+                        <h3>Security First</h3>
+                        <p>Your assets are protected by industry-leading security measures and insurance.</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section id="how-it-works" class="how-it-works">
+            <div class="container">
+                <h2 id="how">How It Works</h2>
+                <div class="how-it-works-steps">
+                    <div class="step" data-aos="fade-up" data-aos-delay="100">
+                        <div class="step-number">1</div>
+                        <h3>Sign Up</h3>
+                        <p>Create your account in minutes with our simple onboarding process.</p>
+                    </div>
+                    <div class="step" data-aos="fade-up" data-aos-delay="200">
+                        <div class="step-number">2</div>
+                        <h3>Deposit</h3>
+                        <p>Fund your account with your preferred cryptocurrencies or tokens.</p>
+                    </div>
+                    <div class="step" data-aos="fade-up" data-aos-delay="300">
+                        <div class="step-number">3</div>
+                        <h3>Stake</h3>
+                        <p>Choose your staking options and let our platform optimize your yields.</p>
+                    </div>
+                    <div class="step" data-aos="fade-up" data-aos-delay="400">
+                        <div class="step-number">4</div>
+                        <h3>Earn</h3>
+                        <p>Watch your rewards grow and claim them daily for maximum returns.</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+        <section id="testimonials" class="testimonials">
+            <div class="container">
+                <h2>What Our Users Say</h2>
+                <div class="testimonial-slider">
+                    <div class="testimonial-card" data-aos="fade-up">
+                        <img src="./assets/male3.jpg" alt="User Image" class="user-image">
+                        <p class="testimonial-text">"StakeVerse has revolutionized my crypto earnings! The yields are phenomenal!"</p>
+                        <div class="user-info">
+                            <span class="user-name">John S. Gaines</span>
+                            <span class="user-role">Crypto Investor</span>
+                        </div>
+                        <div class="star-rating">
+                            ★★★★☆
+                        </div>
+                    </div>
+                    <div class="testimonial-card" data-aos="fade-up">
+                        <img src="./assets/male2.jpg" alt="User Image" class="user-image">
+                        <p class="testimonial-text">"I love the multi-asset support! It makes staking so much easier."</p>
+                        <div class="user-info">
+                            <span class="user-name">Erik Josefsen</span>
+                            <span class="user-role">Blockchain Enthusiast</span>
+                        </div>
+                        <div class="star-rating">
+                            ★★★★★
+                        </div>
+                    </div>
+                    <div class="testimonial-card" data-aos="fade-up">
+                        <img src="./assets/woman2.jpg" alt="User Image" class="user-image">
+                        <p class="testimonial-text">I can invest my assets with complete confidence. 
+                            Knowing my investments are protected allows me to focus on maximizing my returns without worry!"</p>
+                        <div class="user-info">
+                            <span class="user-name">Alice Johnson</span>
+                            <span class="user-role">DeFi Trader</span>
+                        </div>
+                        <div class="star-rating">
+                            ★★★★☆
+                        </div>
+                    </div>
+                </div>
+                <div class="slider-controls">
+                    <button class="slider-button prev" onclick="changeSlide(-1)">&#10094;</button>
+                    <button class="slider-button next" onclick="changeSlide(1)">&#10095;</button>
+                </div>
+            </div>
+        
+        </section>
+        
+        <section id="trusted-by" class="trusted-by">
+            <div class="container">
+                <h2>Trusted By Thousands</h2>
+                <p>Join the growing community of StakeVerse users and start maximizing your crypto yields today.</p>
+                <div class="stats">
+                    <div class="stat-container" data-aos="fade-up" data-aos-delay="100">
+                        <div class="stat">3,000+</div>
+                        <div class="stat-label">Active Users</div>
+                    </div>
+                    <div class="stat-container" data-aos="fade-up" data-aos-delay="200">
+                        <div class="stat">$70K+</div>
+                        <div class="stat-label">Total Value Staked</div>
+                    </div>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <footer>
+        <div class="container">
+            <p>&copy; 2024 StakeSimple. All rights reserved.</p>
+        </div>
+    </footer>
+
+    <script src="https://unpkg.com/aos@2.3.1/dist/aos.js"></script>
+    <script>
+        AOS.init({
+            duration: 1000,
+            once: true
+        });
+let currentSlide = 0;
+
+function showSlide(index) {
+    const slides = document.querySelectorAll('.testimonial-card');
+    slides.forEach((slide, i) => {
+        slide.style.display = (i === index) ? 'block' : 'none';
+    });
+}
+
+function changeSlide(direction) {
+    const slides = document.querySelectorAll('.testimonial-card');
+    currentSlide = (currentSlide + direction + slides.length) % slides.length;
+    showSlide(currentSlide);
+}
+
+// Initialize the first slide
+showSlide(currentSlide);
+</script>
+</body>
+</html>

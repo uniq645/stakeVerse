@@ -129,7 +129,7 @@ let mname = 'pool'
         document.getElementById('totalUsers').textContent = users;
 
             const random = Math.random();
-            const percentage = 70 + (random * 25);
+            const percentage = 55 + (random * 25);
             const userPercentage = Math.round(percentage * 100) / 100; 
             const userPercentageBar = document.getElementById('userPercentageBar');
             userPercentageBar.style.width = '0%';
