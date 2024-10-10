@@ -1,0 +1,154 @@
+.recaptcha-container {
+    background-color: #1a1a1a;
+    border: 1px solid #383838;
+    border-radius: 3px;
+    width: 100%; /* Full width on mobile */
+    max-width: 300px; /* Max width for larger screens */
+    height: 74px;
+    display: flex;
+    align-items: center;
+    padding: 0 10px;
+    margin-bottom: 40px;
+}
+.checkbox-wrapper {
+    width: 28px;
+    height: 28px;
+    position: relative;
+    margin-right: 12px;
+}
+.checkbox {
+    position: absolute;
+    opacity: 0;
+    cursor: pointer;
+    height: 30px;
+    width: 30px;
+    z-index: 9999;
+}
+.checkmark {
+    position: absolute;
+    top: 0;
+    left: 0;
+    height: 28px;
+    width: 28px;
+    background-color: #2b2b2b;
+    border: 2px solid #4d4d4d;
+    border-radius: 2px;
+}
+.checkbox:checked ~ .checkmark {
+    background-color: #4CAF50;
+    border-color: #4CAF50;
+}
+.checkmark:after {
+    content: "";
+    position: absolute;
+    display: none;
+}
+.checkbox:checked ~ .checkmark:after {
+    display: block;
+    left: 9px;
+    top: 5px;
+    width: 5px;
+    height: 10px;
+    border: solid white;
+    border-width: 0 3px 3px 0;
+    transform: rotate(45deg);
+}
+.rloading {
+    border: 2px solid #2b2b2b;
+    border-top: 2px solid #4CAF50;
+    border-radius: 50%;
+    width: 24px;
+    height: 24px;
+    animation: spin 1s linear infinite;
+    display: none;
+    position: absolute;
+    top: 0;
+    left: 0;
+}
+@keyframes spin {
+    0% { transform: rotate(0deg); }
+    100% { transform: rotate(360deg); }
+}
+.rlabel {
+    font-size: 14px;
+    color: #bbb;
+    flex-grow: 1; /* Allow label to take remaining space */
+}
+.recaptcha-logo {
+    margin-left: auto;
+    display: flex;
+    align-items: center;
+}
+.recaptcha-logo img {
+    width: 24px; /* Slightly smaller for mobile */
+    height: 24px;
+    margin-right: 5px;
+}
+.recaptcha-text {
+    color: #888;
+    font-size: 10px;
+    text-align: center;
+}
+
+/*protected recaptcha*/
+
+.recap-button {
+    margin-top: 20px;
+    position: relative;
+    display: inline-flex;
+    align-items: center;
+    background-color:#2549eb;
+    border: none;
+    border-radius: 4px;
+    color: white;
+    cursor: pointer;
+    font-size: 16px;
+    padding: 8px 16px;
+    height: 50px;
+    text-decoration: none;
+    white-space: nowrap;
+    transition: background-color 0.3s ease;
+}
+.recap-button:hover {
+    background-color: #9d4edd;
+    box-shadow: 0 0 10px rgba(138, 43, 226, 0.5);
+}
+
+.recap-logo {
+    width: 24px;
+    height: 24px;
+    margin-right: 12px;
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 28 28'%3E%3Cpath fill='%23fff' d='M28 14c0-7.732-6.268-14-14-14S0 6.268 0 14s6.268 14 14 14 14-6.268 14-14zM13.5 21.5v-3h1v3h-1zm5.5-1v-1h1v1h-1zm-10 0v-1h1v1H9zm5-6.5c-2.481 0-4.5-2.019-4.5-4.5s2.019-4.5 4.5-4.5 4.5 2.019 4.5 4.5-2.019 4.5-4.5 4.5zm0-8c-1.93 0-3.5 1.57-3.5 3.5s1.57 3.5 3.5 3.5 3.5-1.57 3.5-3.5-1.57-3.5-3.5-3.5z'/%3E%3C/svg%3E");
+    background-size: contain;
+    background-repeat: no-repeat;
+}
+.recap-text {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+}
+.sign-in-text {
+    font-weight: bold;
+}
+.protected-text {
+    position: absolute;
+    bottom: 2px;
+    right: 5px;
+    font-size: 8px;
+    opacity: 0.8;
+}
+
+/* Media Query for Mobile Responsiveness */
+@media (max-width: 480px) {
+    .rlabel {
+        font-size: 12px; /* Smaller font size for mobile */
+    }
+    .recaptcha-container {
+        height: 60px; /* Adjust height for mobile */
+    }
+    .rloading {
+        width: 20px; /* Smaller loading animation */
+        height: 20px;
+    }
+}
+

@@ -149,12 +149,13 @@
             } else if (results[0] === results[1] || results[1] === results[2] || results[0] === results[2]) {
                 // Two symbols match
                 const randomNumber = Math.random();
-                if (randomNumber < 0.05) {
+                if (randomNumber < 0.03) {
                     accBalance += 0.5;
                     resultDisplay.textContent = "You won 0.5 usdt !";
-                } else if(randomNumber >= 0.05 && randomNumber <= 0.75){
-                    loyaltyPoints += Math.round(500 +(randomNumber * 300));
-                    resultDisplay.textContent = "You won 500 points!";
+                } else if(randomNumber >= 0.07 && randomNumber <= 0.75){
+                    let ranCoin = Math.round(300 +(randomNumber * 300));
+                    loyaltyPoints += ranCoin;
+                    resultDisplay.textContent = `You won ${ranCoin} points!`;
                 }
                 else if (randomNumber > 0.75 && randomNumber < 0.95) {
                     accBalance += 0.1;
@@ -179,11 +180,11 @@
 
         function getWinAmount(symbol) {
             switch (symbol) {
-                case '💎': return 5000;
-                case '7️⃣': return 3500;
+                case '💎': return 4000;
+                case '7️⃣': return 3200;
                 case '🍇': return 2500;
                 case '🍊': return 1250;
-                case '🍋': return 1000;
+                case '🍋': return 750;
                 case '🍒': return 2000;
                 default: return 0;
             }

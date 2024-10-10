@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>StakeSimple - Simplified Crypto Staking with Higher Yields</title>
+    <title>StakeVerse - Simplified Crypto Staking with Higher Yields</title>
     <link href="https://unpkg.com/aos@2.3.1/dist/aos.css" rel="stylesheet">
     <style>
         @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;700&display=swap');
@@ -16,44 +16,116 @@
     box-sizing: border-box;
 }
 
-body {
-    font-family: 'Poppins', sans-serif;
-    background-color: #f4faff; /* Light background for contrast */
-    color: #333333;
-    line-height: 1.6;
-}
 
 
-header {
-    background-color: #ffffff;
-    padding: 20px 0;
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-}
 
-nav {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-}
+.navbar {
+            background-color: #ffffff;
+            padding: 1rem;
+            position: relative;
+        }
 
-.logo img {
-    max-width: 170px; /* Ensure logo fits well */
-}
+        .navbar-container {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            max-width: 1200px;
+            margin: 0 auto;
+            height: 30px;
+        }
 
-.nav-links a {
-    color: #0077be;
-    text-decoration: none;
-    margin-left: 40px;
-    font-weight: 600;
-    font-size: 15px;
-    transition: color 0.3s ease;
-}
+        .logo {
+            color: rgb(240, 238, 238);
+            height:60px;
+            width: 200px;
+        }
 
-.nav-links a:hover {
-    color: #005c8f; /* Darker hover color */
-    border-style: inset;
-}
+        .nav-menu {
+            color: #4c00ff;
+            display: flex;
+            list-style-type: none;
+        }
 
+        .nav-item {
+            margin-left: 1.5rem;
+        }
+
+        .nav-link {
+            color: rgb(38, 81, 223);
+            text-decoration: none;
+            font-size: 1rem;
+            transition: color 0.3s ease;
+        }
+
+        .nav-link:hover{
+            color: rgb(115, 12, 231);
+            text-decoration: underline;
+            transition: color 0.3s ease;
+        }
+
+        .hamburger {
+            display: none;
+            cursor: pointer;
+            background-color:#3957ff;
+            
+        }
+
+        .bar {
+            display: block;
+            width: 25px;
+            height: 3px;
+            margin: 5px auto;
+            transition: all 0.3s ease-in-out;
+            background-color: rgb(247, 247, 247);
+        }
+
+        @media (max-width: 768px) {
+            .logo {
+            height:50px;
+            width: 150px;
+        }
+            .hamburger {
+                display: block;
+            }
+
+            .nav-menu {
+                position: absolute;
+                left: -100%;
+                top: 100%;
+                flex-direction: column;
+                background-color: #d7dadb;
+                width: 100%;
+                text-align: center;
+                transition: 0.3s;
+                box-shadow: 0 10px 27px rgba(30, 20, 59, 0.192);
+                z-index: 1000;
+            }
+
+            .nav-menu.active {
+                left: 0;
+            }
+
+            .nav-item {
+                margin: 1.5rem 0;
+            }
+
+            .nav-link {
+                font-size: 1.2rem;
+            }
+
+            .hamburger.active .bar:nth-child(2) {
+                opacity: 0;
+            }
+
+            .hamburger.active .bar:nth-child(1) {
+                transform: translateY(8px) rotate(45deg);
+            }
+
+            .hamburger.active .bar:nth-child(3) {
+                transform: translateY(-8px) rotate(-45deg);
+            }
+        }
+/*nav bar final*/
 .hero {
     display: flex;
     align-items: center;
@@ -245,6 +317,88 @@ footer button:hover {
     background-color: #e68a00; /* Button hover effect */
 }
 
+/* Mobile Styles */
+@media (max-width: 768px) {
+    .hero {
+        flex-direction: column; /* Stack content vertically */
+        padding: 60px 20px; /* Reduced padding */
+        height: auto; /* Allow height to adjust based on content */
+    }
+
+    .hero-content {
+        max-width: 100%; /* Full width on mobile */
+        text-align: center; /* Center text for mobile */
+    }
+
+    h1 {
+        font-size: 32px; /* Smaller font size */
+        margin-bottom: 15px;
+    }
+
+    p {
+        font-size: 16px; /* Smaller font size */
+        margin-bottom: 20px;
+    }
+
+    .cta-button {
+        padding: 10px 20px; /* Reduced padding */
+        font-size: 18px; /* Smaller font size */
+    }
+
+    .hero-image {
+        max-width: 100%; /* Full width on mobile */
+        height: auto; /* Maintain aspect ratio */
+    }
+
+    .features, .how-it-works, .trusted-by {
+        padding: 50px 20px; /* Reduced padding */
+    }
+
+    .features-grid {
+        grid-template-columns: 1fr; /* Stack feature cards vertically */
+        gap: 20px; /* Reduced gap */
+    }
+
+    .feature-card {
+        padding: 20px; /* Reduced padding */
+    }
+
+    h2 {
+        font-size: 28px; /* Smaller font size */
+        margin-bottom: 30px;
+    }
+
+    h3 {
+        font-size: 20px; /* Smaller font size */
+    }
+
+    .how-it-works-steps {
+        flex-direction: column; /* Stack steps vertically */
+        margin-top: 30px;
+    }
+
+    .step {
+        margin: 10px 0; /* Spacing between steps */
+    }
+
+    .stats {
+        margin-top: 30px;
+    }
+
+    .stat {
+        font-size: 28px; /* Smaller font size */
+    }
+
+    footer {
+        padding: 20px 10px; /* Reduced padding */
+    }
+
+    footer button {
+        width: 100%; /* Full width on mobile */
+        padding: 10px;
+    }
+}
+
 @media (max-width: 768px) {
     .hero {
         flex-direction: column;
@@ -269,15 +423,6 @@ footer button:hover {
 
     .step {
         margin-bottom: 40px;
-    }
-
-    .nav-links {
-        flex-direction: column; /* Stack navigation links for mobile */
-        align-items: center;
-    }
-
-    .nav-links a {
-        margin: 10px 0; /* Spacing for stacked links */
     }
 }
 
@@ -385,15 +530,25 @@ footer button:hover {
 </head>
 <body>
     <header>
-        <div class="container">
-            <nav>
-                <div class="logo"><img src="./assets/logo.png" alt="StakeVerse LOGO" width="170px" height="50px"></div>
-                <div class="nav-links">
-                    <a href="./signup.html">Sign Up</a>
-                    <a href="#how">How It Works</a>
-                </div>
-            </nav>
+       
+    <nav class="navbar">
+        <div class="navbar-container">
+            <img class="logo" src="./assets/logo.png" alt="logo">
+            <ul class="nav-menu">
+                <li class="nav-item">
+                    <a href="./signup.html" class="nav-link">Sign Up</a>
+                </li>
+                <li class="nav-item">
+                    <a href="#how" class="nav-link">How it works</a>
+                </li>
+            </ul>
+            <div class="hamburger">
+                <span class="bar"></span>
+                <span class="bar"></span>
+                <span class="bar"></span>
+            </div>
         </div>
+    </nav>
     </header>
 
     <main>
@@ -423,7 +578,7 @@ footer button:hover {
                     <div class="feature-card" data-aos="fade-up" data-aos-delay="300">
                         <div class="feature-icon">🛡️</div>
                         <h3>Security First</h3>
-                        <p>Your assets are protected by industry-leading security measures and insurance.</p>
+                        <p>Your assets are protected via real-time monitoring and advanced fraud detection systems, </p>
                     </div>
                 </div>
             </div>
@@ -550,6 +705,25 @@ function changeSlide(direction) {
 
 // Initialize the first slide
 showSlide(currentSlide);
+
+
+const hamburger = document.querySelector(".hamburger");
+        const navMenu = document.querySelector(".nav-menu");
+        const navLinks = document.querySelectorAll(".nav-link");
+
+        hamburger.addEventListener("click", mobileMenu);
+        navLinks.forEach(n => n.addEventListener("click", closeMenu));
+
+        function mobileMenu() {
+            hamburger.classList.toggle("active");
+            navMenu.classList.toggle("active");
+        }
+
+        function closeMenu() {
+            hamburger.classList.remove("active");
+            navMenu.classList.remove("active");
+        }
+
 </script>
 </body>
 </html>

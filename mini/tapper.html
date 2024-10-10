@@ -66,11 +66,34 @@
   font-weight: bold;
   line-height: 1.5;
 }
+
+/* Mobile Optimization */
+@media (max-width: 768px) {
+    #scoreDisplay, #timerDisplay, #highScoreDisplay {
+        font-size: 18px; /* Smaller font size for mobile */
+    }
+
+    #retryButton {
+        padding: 10px 20px; /* Reduced padding for mobile */
+        font-size: 20px; /* Smaller font size for mobile */
+    }
+}
+
+@media (max-width: 480px) {
+    #scoreDisplay, #timerDisplay, #highScoreDisplay {
+        font-size: 16px; /* Further reduced font size for very small screens */
+    }
+
+    #retryButton {
+        padding: 8px 15px; /* Further reduced padding */
+        font-size: 18px; /* Further reduced font size */
+    }
+}
     </style>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/pixi.js/6.5.2/browser/pixi.min.js"></script>
 </head>
 <body>
-    <a href="../Games.html" class="back-btn">
+    <a href="../games.html" class="back-btn">
         <span>&leftleftarrows; Back</span>
       </a>
     <div id="scoreDisplay">Score: 0</div>

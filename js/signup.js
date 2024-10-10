@@ -40,8 +40,26 @@ function captureReferral() {
       localStorage.setItem('referredBy', refId);
     }
 }
+
+var valLoad ="";
 // Call this function when the page loads
-window.onload = captureReferral;
+window.onload = function() {
+  checkbox.checked = false;
+  checkmark.style.display = 'block';
+  loading.style.display = 'none';
+  checkbox.disabled = false;
+  captureReferral();
+
+};
+
+function circleLoad(boolButton){ 
+  const button = boolButton ? document.getElementById('sign_in'):document.getElementById('sign_up');
+      const loader = button.querySelector('.loader');
+          loader.classList.add('show');
+          setTimeout(() => {
+              loader.classList.remove('show');
+          }, 3000);
+}
 
 
 function generateUserId(length = 8) {
@@ -100,29 +118,64 @@ async function generateRefId(userId) {
     return userExist;
 }
 
+function showStatus(message, col = "#f84e4e", opt=0){
+  var emailError = document.getElementById('signUpError');
+  if(opt == 1){emailError = document.getElementById('signInError');}
+  emailError.textContent = message;
+emailError.style.color = col;
+  emailError.classList.add('show');
+setTimeout(()=>{emailError.classList.remove('show')},5000);
+}
+
+let validEmail = false;
+document.addEventListener('DOMContentLoaded', function() {
+  var emailError = document.getElementById('signUpError');
+  var emailForm = document.getElementById('signUpForm');
+  var emailInput = document.getElementById('signUpEmail');
+
+  emailInput.addEventListener('input', function() {
+      var email = this.value;
+      var regex = /^[a-zA-Z0-9._%+-]+@(gmail|yahoo|outlook)\.com$/;;
+
+      if (!regex.test(email)) {
+          validEmail = false; 
+      } else {
+        validEmail = true;
+      }  
+  });
+});
+
+
+
 async function handleSignup(event) {
     try {
       event.preventDefault();
       const username = document.getElementById("signUpName").value.trim();
       const password = document.getElementById("signUpPassword").value.trim();
       const referredBy = localStorage.getItem('referredBy') || '';
-      const signUpError = document.getElementById('signUpError');
       const showSignInButton = document.getElementById('showSignIn');
       const signUpEmail = document.getElementById('signUpEmail').value.trim();
+      const signUpBtn = document.getElementById("sign_up");
 
-      // Input validation
       if (!username || !password) {
         alert('Please fill in both username and password');
         return;
+      }else if(checkbox.checked == false) {
+        showStatus("Verification failed, Please solve recaptcha!");
+        return;
       }
-  
+      if (validEmail == false){
+        showStatus("Please enter valid email address!");
+        return;
+  }
+
+      signUpBtn.textContent = "Validating info...";
+      setTimeout(()=>{signUpBtn.textContent = "SIGN UP";},3000);
       let userExist = await valUser();
       if (userExist == true){
-            signUpError.textContent = "User with same username or email already exists!";
-            signUpError.style.color = "red";
-            signUpError.classList.add('show');
+            showStatus("User with same username or email already exists!");
       }else {
-          
+      circleLoad(false); //sign up or sign in load validator
       // Generate user IDs
       const newUserId = generateUserId();
       const newRefId = await generateRefId(newUserId);
@@ -133,11 +186,7 @@ async function handleSignup(event) {
       if (response.status !== 'success') { 
         throw new Error('Failed to add user to Google Sheets');
     }else{
-        setTimeout(() => {
-            signUpError.textContent = "Account created successfully!";
-            signUpError.style.color = "green";
-            signUpError.classList.add('show');
-        }, 1000);
+        showStatus("Account created successfully!","green",opt=1);
         setTimeout(()=>{showSignInButton.click();},500);
         
     }
@@ -155,8 +204,7 @@ async function handleSignup(event) {
       }
       
     } catch (error) {
-      console.error(error);
-      alert('An error occurred. Please try again.');
+      alert('Please check your internet connection and try again!');
     }
   }
   function Initiate(uname){
@@ -181,8 +229,6 @@ async function handleSignup(event) {
   appendData("Settings", uname+","+welcome);
 
   }
-
-  
 
   function appendData(sheetarg,strData) {
     const sheet = sheetarg;
@@ -220,16 +266,15 @@ async function handleSignin(event){
           alert('Please fill in both username and password');
           return;
         }
-    
+        
+        circleLoad(true);
         //get the usename and fetch corresponding password from sheets, if sheets
-        //contains username, user exists, then check password,if corect., allow sign in
         let query = `WHERE Username = '${username}'`;
         let response = await makeRequest({
           action: 'query',
           sheet: 'User',
           query: query
         });
-    
       if(response == "Error"){console.error("Errow within making request")}
 
       if(response.status === 'success' && Array.isArray(response.data)) {
@@ -248,31 +293,22 @@ async function handleSignin(event){
                 expiresAt: Date.now() + 3600000 // 1 hour in milliseconds
               };
               const encodedUsername = encodeURIComponent(user[0]);
-              
-              localStorage.setItem('session', JSON.stringify(sessionData));
-              // For example, redirect to a dashboard page or update UI
-              //now we are using url sessions
-              setTimeout(()=>{window.location.href = `home.html?username=${encodedUsername}`;},1500)//}
+              setTimeout(()=>{window.location.href = `home.html?username=${encodedUsername}`;},1100)//}
               setTimeout(() => {
-                signInError.textContent = "Sign-in Successfully Done!";
-                signInError.style.color = "green";
-                signInError.classList.add('show');
-            }, 1000);
+                showStatus("Sign-in Successfully Done!","green",opt=1);
+            }, 500);
               return;
           }
       }
-      signInError.textContent = 'Incorrect Username or Password. Please try again!';
-      signInError.style.color = "red"; 
-      signInError.classList.add('show')
+      showStatus('Incorrect Username or Password. Please try again!', "#f84e4e", opt=1);
     } 
         else{
           throw new Error('Unexpected data format from server') }
             
         }
         catch (error) {
-
         console.error(error);
-        alert('Unexpected error occurred. Please try again.');
+        alert('Please check your internet connection and try again');
 
       }
   }

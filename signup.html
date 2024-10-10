@@ -4,10 +4,11 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Web3 Flip Card Sign Up / Sign In</title>
+    <link rel="stylesheet" href="./css/signup.css">
     <script src="./js/signup.js" defer></script>
     <style>
         :root {
-            --primary-color: #00ffff; /* Cyan */
+            --primary-color: #497ff3; /* Cyan */
             --secondary-color: #8a2be2; /* Blue Violet */
             --background-color: #0f0f1a; /* Very Dark Blue */
             --card-background: #1a1a2e; /* Dark Blue */
@@ -123,13 +124,23 @@
             color: var(--primary-color);
         }
 
+
+        #sign_in {
+            background-color: #3457f5
+        }
+
+        #sign_in:hover{
+            background-color: #3457f5;
+            box-shadow: 0 0 10px rgba(138, 43, 226, 0.5);
+        }
+
         button {
-            background-color: var(--secondary-color);
+            background-color: #4060ee;
             color: var(--text-color);
             border: none;
             padding: 12px;
             border-radius: 5px;
-            font-size: 16px;
+            font-size: 14px;
             cursor: pointer;
             transition: all 0.3s;
             position: relative;
@@ -139,7 +150,7 @@
         }
 
         button:hover {
-            background-color: #9d4edd;
+            background-color: #2e52f1;
             box-shadow: 0 0 10px rgba(138, 43, 226, 0.5);
         }
 
@@ -184,7 +195,7 @@
             align-items: center;
             border-radius: 5px;
             opacity: 0;
-            transition: opacity 0.5s;
+            transition: opacity 0.3s;
             pointer-events: none;
         }
 
@@ -200,7 +211,7 @@
             border: 4px solid var(--primary-color);
             border-top: 4px solid transparent;
             border-radius: 50%;
-            animation: spin 3s linear infinite;
+            animation: spin 2s linear infinite;
         }
 
         @keyframes spin {
@@ -230,9 +241,13 @@
                     <input type="password" id="signInPassword" required placeholder=" ">
                     <label for="signInPassword">Password</label>
                 </div>
-                <button type="submit" onclick="handleSignin(event)">
-                    Sign In
-                    <div class="loader"></div>
+                
+                <button id="sign_in" type="submit" class="recap-button">
+                    <span class="recap-logo"></span>
+                    <span class="recap-text">
+                        <span class="sign-in-text">Sign in<div class="loader"></div></span>
+                    </span>
+                    <span class="protected-text">Protected by reCAPTCHA</span>
                 </button>
             </form>
             <div class="toggle-form">
@@ -255,7 +270,23 @@
                     <input type="password" id="signUpPassword" required placeholder=" ">
                     <label for="signUpPassword">Password</label>
                 </div>
-                <button type="submit" onclick="handleSignup(event)">
+                <div class="recaptcha-container">
+                    <div class="checkbox-wrapper">
+                        <input type="checkbox" class="checkbox" id="recaptcha">
+                        <span class="checkmark"></span>
+                        <div class="rloading"></div>
+                    </div>
+                    <span for="recaptcha" class="rlabel">I'm not a robot</span>
+                    <div class="recaptcha-logo">
+                        <img src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'%3E%3Cpath fill='%234CAF50' d='M12 2L1 12h3v9h6v-4h4v4h6v-9h3L12 2z'/%3E%3C/svg%3E" alt="reCAPTCHA">
+                        <div class="recaptcha-text">
+                            <a href="https://support.google.com/recaptcha/?hl=en" style="text-decoration: none;color:inherit">
+                                reCAPTCHA<br>Privacy - Terms
+                            </a>
+                        </div>
+                    </div>
+                </div>
+                <button id="sign_up" type="submit" onclick="handleSignup(event)">
                     Sign Up
                     <div class="loader"></div>
                 </button>
@@ -288,7 +319,7 @@
         });
 
         signInForm.addEventListener('submit', (e) => {
-            // Simulate sign in
+            // Simulate sign i
             handleSignin(e);
         });
 
@@ -317,14 +348,33 @@
             button.addEventListener('mouseleave', () => {
                 button.style.transform = 'scale(1)';
             });
-            button.addEventListener('click', (e) => {
-                const loader = button.querySelector('.loader');
-                loader.classList.add('show');
-                setTimeout(() => {
-                    loader.classList.remove('show');
-                }, 2000); // Simulating a 2-second loading time
-            });
         });
+
+        const checkbox = document.getElementById('recaptcha');
+        const checkmark = document.querySelector('.checkmark');
+        const loading = document.querySelector('.rloading');
+        checkbox.addEventListener('change', function() {
+            if (this.checked) {
+                checkmark.style.display = 'none';
+                loading.style.display = 'block';
+                document.querySelector(".rlabel").style = "color: #bbb;"
+                // Simulate verification process
+                setTimeout(() => {
+                    loading.style.display = 'none';
+                    checkmark.style.display = 'block';
+                    checkbox.disabled = true; // Prevent further changes
+                }, 3000); // 2 seconds delay to simulate verification
+            }
+            //Simulate verification expired
+            setTimeout(() => {
+                    loading.style.display = 'none';
+                    checkmark.style.display = 'none';
+                    checkbox.disabled = false; 
+                    this.checked = false;
+                    document.querySelector(".rlabel").style = "color: #f84e4e;";
+                }, 25000); // 25 seconds[]
+        });
+
     </script>
 </body>
 </html>

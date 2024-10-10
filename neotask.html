@@ -235,6 +235,55 @@
         .pulsing {
             animation: pulse 2s ease-in-out infinite;
         }
+
+        @media (max-width: 600px) {
+    h1 {
+        font-size: 1.8rem; /* Reduce font size for mobile */
+        margin-bottom: 1rem; /* Adjust margin */
+    }
+
+    .loyalty-symbol {
+        font-size: 1.5rem; /* Reduce font size */
+        margin-right: 0.25rem; /* Adjust margin */
+    }
+
+    .task-info {
+        align-items: flex-start; /* Align task info to start */
+    }
+
+    .task-name {
+        font-size: 1.1rem; /* Reduce font size */
+    }
+
+    .task-description {
+        font-size: 0.8rem; /* Reduce font size */
+    }
+
+    .task-points {
+        font-size: 1rem; /* Reduce font size */
+        margin-left: 0; /* Remove left margin */
+        margin-top: 0.5rem; /* Add top margin */
+    }
+
+    .task-button {
+        font-size: 0.9rem; /* Reduce font size */
+        padding: 0.4rem 0.8rem; /* Adjust padding */
+    }
+
+    .task-cooldown {
+        font-size: 0.7rem; /* Reduce font size */
+    }
+
+    .modal-content {
+        padding: 15px; /* Reduce padding */
+        width: 90%; /* Adjust width for mobile */
+        max-width: none; /* Allow full width */
+    }
+
+    .close-modal {
+        font-size: 24px; /* Reduce close button size */
+    }
+}
     </style>
 </head>
 <body>
@@ -258,13 +307,13 @@
     </div>
 
     <nav class="navbar">
-        <a href="./home.html" class="nav-item active" data-index="0">
+        <a href="./home.html" class="nav-item" data-index="0">
             <svg viewBox="0 0 24 24"><path d="M3 13h1v7c0 1.103.897 2 2 2h12c1.103 0 2-.897 2-2v-7h1a1 1 0 0 0 .707-1.707l-9-9a.999.999 0 0 0-1.414 0l-9 9A1 1 0 0 0 3 13zm9-8.586 6 6V15l.001 5H6v-9.586l6-6z"/><path d="M12 18c3.703 0 4.901-3.539 4.95-3.689l-1.9-.621c-.008.023-.781 2.31-3.05 2.31-2.238 0-3.02-2.221-3.051-2.316l-1.899.627C7.099 14.461 8.297 18 12 18z"/></svg>
         </a>
         <a href="./Earnings.html" class="nav-item" data-index="1">
             <svg viewBox="0 0 24 24"><path d="M12 6C7.03 6 2 7.546 2 10.5v4C2 17.454 7.03 19 12 19s10-1.546 10-4.5v-4C22 7.546 16.97 6 12 6zm-8 8.5v-1.197a9.989 9.989 0 0 0 2 .86v1.881c-1.312-.514-2-1.126-2-1.544zm12 2.914v-1.96c2.446-.124 4-.66 4-1.454v-1.197a9.989 9.989 0 0 0 2 .86v1.881c0 1.19-2.638 1.989-6 1.87zm-6-4.72c-3.14 0-6-1.033-6-1.694 0-.661 2.86-1.694 6-1.694s6 1.033 6 1.694c0 .661-2.86 1.694-6 1.694z"/></svg>
         </a>
-        <a href="./neotask.html" class="nav-item" data-index="2">
+        <a href="./neotask.html" class="nav-item active" data-index="2">
             <svg viewBox="0 0 24 24"><path d="M22 5.18 10.59 16.6l-4.24-4.24 1.41-1.41 2.83 2.83 10-10L22 5.18zM12 20c-4.41 0-8-3.59-8-8s3.59-8 8-8c1.57 0 3.04.46 4.28 1.25l1.44-1.44C16.1 2.67 14.13 2 12 2 6.48 2 2 6.48 2 12s4.48 10 10 10c1.73 0 3.36-.44 4.78-1.22l-1.5-1.5c-1 .46-2.11.72-3.28.72zm7-5h-3v2h3v3h2v-3h3v-2h-3v-3h-2v3z"/></svg>
         </a>
         <a href="./refferal.html" class="nav-item" data-index="3">
@@ -273,7 +322,7 @@
         <a href="./Account.html" class="nav-item" data-index="4">
             <svg viewBox="0 0 24 24"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm0 3c1.66 0 3 1.34 3 3s-1.34 3-3 3-3-1.34-3-3 1.34-3 3-3zm0 14.2c-2.5 0-4.71-1.28-6-3.22.03-1.99 4-3.08 6-3.08 1.99 0 5.97 1.09 6 3.08-1.29 1.94-3.5 3.22-6 3.22z"/></svg>
         </a>
-        <a href="./Games.html" class="nav-item" data-index="5">
+        <a href="./games.html" class="nav-item" data-index="5">
             <svg viewBox="0 0 24 24"><path d="M21 6H3c-1.1 0-2 .9-2 2v8c0 1.1.9 2 2 2h18c1.1 0 2-.9 2-2V8c0-1.1-.9-2-2-2zm-10 7H8v3H6v-3H3v-2h3V8h2v3h3v2zm4.5 2c-.83 0-1.5-.67-1.5-1.5s.67-1.5 1.5-1.5 1.5.67 1.5 1.5-.67 1.5-1.5 1.5zm4-3c-.83 0-1.5-.67-1.5-1.5S18.67 9 19.5 9s1.5.67 1.5 1.5-.67 1.5-1.5 1.5z"/></svg>
         </a>
         <div class="glow"></div>
@@ -320,6 +369,8 @@ function createTaskElement(task) {
     const completeButton = taskElement.querySelector('.task-button');
     completeButton.addEventListener('click', () => {
         currentTask = task;
+        let url = "https://"+currentTask.dest;
+        window.open(url, '_blank');
         modal.style.display = 'block';
     });
 
