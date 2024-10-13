@@ -21,9 +21,9 @@ function updDet (sel){
     }
 }
 let uname;
+var base_rate;
 
-
-let accBalance = 0; let tStake = 0;let base_rate=0;
+let accBalance = 0; let tStake = 0;
 
 const stakingOptions = [
     { yield: '105', duration: '30 days' },
@@ -77,7 +77,7 @@ const WEBAPP_URL = 'https://script.google.com/macros/s/AKfycbymvjCJEg2nEADZUVJeR
         if(response.status === 'success' && Array.isArray(response.data)) {
             let info = response.data[1];
             pph.textContent = Number(info[2]).toFixed(3);
-            base_rate = Number(info[1]).toFixed(3);
+            base_rate = Number(info[1]);
             accBalance = info[7];
             loyal.textContent = info[6];
             tStake = Number(info[9]);
@@ -87,7 +87,6 @@ const WEBAPP_URL = 'https://script.google.com/macros/s/AKfycbymvjCJEg2nEADZUVJeR
                 }
                 catch (error) {
                 console.error(error);
-                alert('Unexpected error occurred. Please try again.');
               }
           }
         
@@ -167,7 +166,7 @@ function Estimate(APY=0){
 }
    function getDate(){
     const date = new Date();
-    const formattedDate = `${String(date.getMonth() + 1).padStart(2, '0')}/${String(date.getDate()).padStart(2, '0')}/${String(date.getFullYear()).slice(2)}`;
+    const formattedDate = `${String(date.getMonth() + 1).padStart(2, '0')}/${String(date.getDate()+1).padStart(2, '0')}/${String(date.getFullYear()).slice(2)}`;
     return formattedDate;
    } 
 function stakeNow(){
@@ -201,6 +200,12 @@ function stakeNow(){
             action: 'update',
             sheet: "Portforlio",
             condition: JSON.stringify({column: "UserID", value: uname}),
+            updateValues: JSON.stringify({column: "Current Rate", value: Number(base_rate + pph) })
+        });
+        makeRequest({
+            action: 'update',
+            sheet: "Portforlio",
+            condition: JSON.stringify({column: "UserID", value: uname}),
             updateValues: JSON.stringify({column: "Account", value: Number(accBalance)})
         });
         setTimeout(()=>{
@@ -211,11 +216,23 @@ function stakeNow(){
                 updateValues: JSON.stringify({column: "Total Stake", value: Number(tStake)})
             });
         },3000);
-        alert("Staking Initiated, Delgation is successfull");   
+        alert("Staking Initiated, Delegation is successfull"); 
+        setTimeout(()=>{
+            const encodedUsername = encodeURIComponent(uname);
+        var extension = `?username=${encodedUsername}`;
+        let url = "./Earnings.html";
+        let extURL = url + extension;
+        window.location.href = extURL; },1000) 
+        
     }
     else {
         //redirect to deposit page
-        alert("Insufficient coins in wallet")
+        alert("Insufficient coins in wallet!");
+        const encodedUsername = encodeURIComponent(uname);
+        var extension = `?username=${encodedUsername}`;
+        let url = "./Account.html";
+        let extURL = url + extension;
+        window.location.href = extURL;
     }
 }
 

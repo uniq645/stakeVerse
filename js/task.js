@@ -56,7 +56,6 @@ async function handleTask(){
         }
        catch (error) {
         console.error(error);
-        alert('Unexpected error occurred. Please try again.');
       }
   }
 
@@ -100,7 +99,6 @@ function updatePoints(points) {
         }
         catch (error) {
         console.error(error);
-        alert('Unexpected error occurred. Please try again.');
       }
   }
 

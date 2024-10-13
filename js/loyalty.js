@@ -62,7 +62,6 @@ const WEBAPP_URL = 'https://script.google.com/macros/s/AKfycbymvjCJEg2nEADZUVJeR
                 }
                 catch (error) {
                 console.error(error);
-                alert('Unexpected error occurred. Please try again.');
               }
           }
     async function handlePort(){
@@ -86,7 +85,6 @@ const WEBAPP_URL = 'https://script.google.com/macros/s/AKfycbymvjCJEg2nEADZUVJeR
                 }
                 catch (error) {
                 console.error(error);
-                alert('Unexpected error occurred. Please try again.');
               }
           }
 
@@ -115,3 +113,4 @@ const WEBAPP_URL = 'https://script.google.com/macros/s/AKfycbymvjCJEg2nEADZUVJeR
                 window.location.href = `signup.html`;
             }
         }
+        

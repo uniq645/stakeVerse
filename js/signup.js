@@ -204,9 +204,10 @@ async function handleSignup(event) {
       }
       
     } catch (error) {
-      alert('Please check your internet connection and try again!');
+      console.error(error)
     }
   }
+
   function Initiate(uname){
     //Take uname and creates necessary objects to kisckstart User
     //Creates portfolio, creates booster, creates payment settings
@@ -308,8 +309,6 @@ async function handleSignin(event){
         }
         catch (error) {
         console.error(error);
-        alert('Please check your internet connection and try again');
-
       }
   }
 

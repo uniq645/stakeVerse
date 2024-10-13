@@ -68,8 +68,7 @@ async function handleBoost(){
       throw new Error('Unexpected data format from server') }    
     }
     catch (error) {
-    console.error(error);
-    alert('Unexpected error occurred. Please try again.');
+  console.error(error);
     //redirect to sign in page
   }
 }
@@ -96,9 +95,9 @@ async function handleSubs(){
                 const row = tableBody.insertRow();
                 row.innerHTML = `
             <td>${transaction[0]}</td>
-            <td>${transaction[4]}</td>
-            <td>$${transaction[6]}</td>
-            <td>${transaction[7]}</td>
+            <td>${transaction[6]}</td>
+            <td>$${transaction[4]}</td>
+            <td>${transaction[3]}</td>
         `;}
             });
     } else{
@@ -106,7 +105,6 @@ async function handleSubs(){
     }
     catch (error) {
     console.error(error);
-    alert('Unexpected error occurred. Please try again.');
     //redirect to sign in page
   }
 }

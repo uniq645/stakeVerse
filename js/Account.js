@@ -103,7 +103,6 @@ async function handlePort(){
         }
         catch (error) {
         console.error(error);
-        alert('Unexpected error occurred. Please try again.');
       }
   }
 
@@ -142,7 +141,6 @@ let mname = 'pool'
         }
         catch (error) {
         console.error(error);
-        alert('Unexpected error occurred. Please try again.');
       }
   }
 
