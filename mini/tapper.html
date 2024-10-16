@@ -225,7 +225,7 @@
                     score += 10;
                     createParticleEffect(item.x, item.y, 0xFFD700);
                 } else if (item.type === 'mine') {
-                    score = Math.max(0, score - 20);
+                    score = Math.max(0, score - 50);
                     createParticleEffect(item.x, item.y, 0xFF0000);
                 }
                 itemContainer.removeChild(item);

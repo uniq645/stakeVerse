@@ -534,17 +534,17 @@
                     <div class="product-info">
                         <h3>Stable Duo</h3>
                         <p>Combines the stability of USDT 
-                            and the growth potential of Ethereum 2.0. Earn steady profits, slow but sure !                        </p>
+                            and the growth potential of Ethereum. Earn steady profits now. </p>
                         <p class="apy">APY: 210%</p>
                         <a href="#" class="stake-button" onclick="selector = 1;showSliding(selector)">Stake Now</a>
                     </div>
                 </div>
                 <div id="sNorm" class="product-card">
-                    <div class="product-image" style="background-image: url('./assets/leg1.png')"></div>
+                    <div class="product-image" style="background-image: url('./assets/leg1.jpg')"></div>
                     <div class="product-info">
                         <h3>Legacy Staking</h3>
                         <p>Diversify your portfolio by staking on some of the most innovative blockchain platforms: 
-                            Cardano (ADA), Polkadot (DOT), and Solana (SOL). Stake for the future.
+                            Cardano (ADA), Polkadot (DOT), and Solana (SOL). Suitable for delagators who want sustainable rewards at conservative risk.
                         </p>
                         <p class="apy">APY: 300%</p>
                         <a href="#" class="stake-button" onclick="selector = 2;showSliding(selector)">Stake Now</a>
@@ -554,8 +554,9 @@
                     <div class="product-image" style="background-image: url('./assets/memecon.png')"></div>
                     <div class="product-info">
                         <h3>Apex Pro</h3>
-                        <p>Stake high-volatility, high-reward meme coins like Pepe Unchained. Gain 
+                        <p>Stake high-reward meme coins like Pepe Unchained. Gain 
                             explosive growths on your assets thriving on quick market movements. 
+                            Designed for the bold, offering the highest potential returns—but with significant risk. 
                          </p>
                         <p class="apy">APY: 550%</p>
                         <a href="#" class="stake-button" onclick="selector = 3;showSliding(selector)">Stake Now</a>
@@ -620,6 +621,9 @@
     const dailyLoginAnimation = document.querySelector('.daily-login-animation');
     const pph = document.getElementById("pph");
     const loyal = document.getElementById("loyal");
+    //set default local storage items
+    pph.innerHTML = localStorage.getItem("PPH") || "fetching...";
+    loyal.innerHTML = localStorage.getItem("LYL") || "fetching...";
 
     const navItems = document.querySelectorAll('.nav-item');
     const glow = document.querySelector('.glow');
@@ -723,7 +727,6 @@
             let next = (currentSlide + 1) % slides.length;
             showSlide(next);
         }
-
         setInterval(nextSlide, 6000); // Change slide every 3 seconds
     </script>
 </body>

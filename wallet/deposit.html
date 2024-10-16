@@ -195,7 +195,7 @@
 </head>
 <body>
     <div class="container">
-        <h1>Secure Wallet Deposit</h1>
+        <h1>Wallet Deposit</h1>
         <div class="input-group">
             <input type="text" id="paymentID" placeholder="Paste your payment ID here">
             <span class="tooltip">
@@ -253,6 +253,19 @@ async function makeRequest(data) {
     return final;
 }
 
+function updateData(sheet,condCol,condVal,updCol,updVal) {
+const conditionColumn = condCol;
+const conditionValue = condVal;
+const updateColumn = updCol;
+const updateValue = updVal;
+makeRequest({
+    action: 'update',
+    sheet: sheet,
+    condition: JSON.stringify({column: conditionColumn, value: conditionValue}),
+    updateValues: JSON.stringify({column: updateColumn, value: updateValue})
+});
+}
+
 async function handlePort(){
     try {
         let query = `WHERE UserID = '${uname}'`;
@@ -278,12 +291,28 @@ async function handlePort(){
         alert('Unexpected error occurred. Please try again.');
       }
   }
+  
+//fetching trans info for validation
+async function fetchTrans(payId) {
+    //formatting for google sheets
+    payId = "D"+payId.toString();
+    // Simulated API response
+    let query = `WHERE PaymentID = '${payId}'`;
+    let resp =  await makeRequest({
+    action: 'query',
+    sheet: "Trans",
+    query: query
+});
+    //filter transaction based on userID first before showing.
+    return await resp.data;
+}
 
 let already = false;
+let lastPayID = "none";
         function startPolling(paymentId) {
             let pollCount = 0;
             const maxPolls = 180; // Poll for up to 15 minutes (180 * 5 seconds)
-
+            
             const pollInterval = setInterval(() => {
                 pollCount++;
 
@@ -303,30 +332,31 @@ let already = false;
                     paymentStatus.textContent = `Payment Status: ${data.payment_status}`;
                     //use payid, actually_paid, pay_currency to veriify
                     if (data.payment_status == 'waiting' && already == false) {
-                        let strData = String(uname+","+data.payment_id+","+"N/A"+","+data.pay_currency+","+data.price_amount+","+data.payment_status+","+data.updated_at);
+                        let strData = String(uname+","+String("D"+data.payment_id)+","+"N/A"+","+data.pay_currency+","+data.price_amount+","+data.payment_status+","+data.updated_at);
                         values = strData.split(",");
                         //log to trans table
                         makeRequest({
                             action: 'append',
-                            sheet: Trans,
+                            sheet: "Trans",
                             values: JSON.stringify(values)
                          });
                          already = true;
+                         lastPayID = data.payment_id;
                     }
 
                     if (data.payment_status == 'confirming' || data.payment_status === 'sending') {
-                        let strData = String(uname+","+data.payment_id+","+data.actually_paid+","+data.pay_currency+","+data.price_amount+","+data.payment_status+","+data.updated_at);
+                        let strData = String(uname+","+String("D"+data.payment_id)+","+data.actually_paid+","+data.pay_currency+","+data.price_amount+","+data.payment_status+","+data.updated_at);
                         values = strData.split(",");
                         //log to trans table
                         makeRequest({
                             action: 'append',
-                            sheet: Trans,
+                            sheet: "Trans",
                             values: JSON.stringify(values)
                          });
                         clearInterval(pollInterval);
                          //updates account balance
-                         accBalance += Number(data.price_amount);
-                         updateData("Portforlio","UserID",uname,accBalance);
+                         accBalance += Number(data.actually_paid);
+                         updateData("Portforlio","UserID",uname,"Account",accBalance);
                     }
                 })
                 .catch(error => console.error('Error checking payment status:', error));
@@ -345,27 +375,40 @@ window.onload = function() {
         uname = decodedUsername;
         console.log( `Hello, ${decodedUsername}!`);
         handlePort();
-        const encodedUsername = encodeURIComponent(uname);
-        var extension = `?username=${encodedUsername}`;
-        navItems.forEach(nav => {   
-            let url = nav.getAttribute('href');
-            let extURL = url + extension;
-            nav.setAttribute("href", extURL);
-        });
+
     } else {
         console.log('No user found. Please sign up.');
         window.location.href = `signup.html`;
     }
 }
-        depositButton.addEventListener('click', () => {
+        depositButton.addEventListener('click', async () => {
             const pay = payID.value;
 
-            if (!pay || isNaN(pay)) {
+            if (!pay || isNaN(pay) || pay.toString().length < 10) {
                 alert('Please enter a valid ID.');
                 return;
-            } else{startPolling(pay)}
-        });
-        
+            } else{
+                let payData = await fetchTrans(pay);
+                console.log(payData);
+                already = lastPayID.toString() == pay.toString()? true: false;
+
+                if(payData.length == 1){
+                    //not found
+                    console.log("first Cond");
+                    startPolling(pay)
+                } else if (payData.length == 2 && payData[1][5] == "waiting"){
+                    //found
+                    //check status
+                    console.log("2nd Cond");
+                    already = true;
+                    startPolling(pay); //if status has changed
+                } else if(payData.length >= 2 && payData[payData.length-1][5] != "waiting"){
+                    //repeated confirmation
+                    alert("Payment ID has been already confirmed");
+                }
+                
+            }
+        });     
    </script>
 </body>
 </html>

@@ -237,8 +237,8 @@ body {
 }
 @media (max-width: 600px) {
   .inbox-modal {
-    top: 12%;
-    left: 20%;
+    top: 13%;
+    left: 9%;
     width: 300px;
     height: 300px;
   }

@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>stakeVerse - Earnings</title>
+    <title>StakeVerse - Earnings</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/aos@2.3.4/dist/aos.css">
     <link rel="stylesheet" href="./css/Earning.css">
@@ -620,6 +620,7 @@
         const rate = document.getElementById('earningRate');
         const overEarn = document.getElementById("overEarn");
         let uname;
+        rate.innerHTML = localStorage.getItem("PPH") || "$0.0";
 
         async function handlePort(){
             try {

@@ -318,7 +318,16 @@ const WEBAPP_URL = 'https://script.google.com/macros/s/AKfycbymvjCJEg2nEADZUVJeR
         }
   
 
-
+        function getDate(){
+    const date = new Date();
+    const month = date.getMonth() + 1; // getMonth() returns a zero-based month, so we add 1 to get the correct month
+    const day = date.getDate();
+    const year = date.getFullYear();
+    
+    const formattedDate = `${month}/${day}/${year}`;
+    console.log(formattedDate);
+    return formattedDate;
+  }
 
         function setMaxAmount() {
             document.getElementById('withdrawalAmount').value = accBalance;
@@ -340,7 +349,7 @@ const WEBAPP_URL = 'https://script.google.com/macros/s/AKfycbymvjCJEg2nEADZUVJeR
         condition: JSON.stringify({column: "UserID", value: uname}),
         updateValues: JSON.stringify({column: "Account", value: accBalance})
     });
-                let strData = String(uname+","+generateTransId()+","+rbalance.value+","+selCurrency.value+","+"Queued"+","+"Proccessing"+","+address.textContent+","+memo.textcontent);
+                let strData = String(uname+","+generateTransId()+","+rbalance.value+","+selCurrency.value+","+"Queued"+","+getDate()+","+address.textContent+","+memo.textcontent);
                         values = strData.split(",");
                         //log to trans table
                         makeRequest({

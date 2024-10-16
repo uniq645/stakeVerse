@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Crypto Trivia Challenge</title>
+    <title>Trivia Showdown</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css">
     <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.5.1/dist/confetti.browser.min.js"></script>
@@ -230,15 +230,39 @@
             };
             localStorage.setItem('triviaGameState', JSON.stringify(gameState));
         }
+// Define the URLs with their weights
+const options = [
+    { url: "https://opentdb.com/api.php?amount=10&category=17&difficulty=easy&type=multiple", weight: 5 }, // Sci & Nature
+    { url: "https://opentdb.com/api.php?amount=10&category=19&difficulty=easy&type=multiple", weight: 3 }, // General Maths
+    { url: "https://opentdb.com/api.php?amount=10&category=18&type=multiple", weight: 2 } // Sci IT
+];
 
-        async function fetchQuestions() {
+// Function to select a URL based on weights
+function getRandomURL() {
+    const totalWeight = options.reduce((sum, option) => sum + option.weight, 0);
+    const randomNum = Math.random() * totalWeight; // Random number between 0 and total weight
+    let cumulativeWeight = 0;
+
+    for (const option of options) {
+        cumulativeWeight += option.weight;
+        if (randomNum < cumulativeWeight) {
+            return option.url; // Return the selected URL
+        }
+    }
+}
+let api_url = getRandomURL();
+console.log(api_url)
+
+
+
+        async function fetchQuestions(api_url) {
             if (attempts <= 0) {
                 questionEl.textContent = 'No more attempts left for today. Come back tomorrow!';
                 return;
             }
 
             try {
-                const response = await axios.get('https://opentdb.com/api.php?amount=10&category=18&type=multiple');
+                const response = await axios.get(api_url);
                 questions = response.data.results;
                 attempts--;
                 attemptsEl.textContent = attempts;
@@ -523,7 +547,7 @@ window.onload = function() {
         let extURL = url + extension;
         item.setAttribute("href", extURL);
 
-        fetchQuestions();
+        fetchQuestions(getRandomURL());
         
     } else {
         console.log('No user found. Please sign up.');

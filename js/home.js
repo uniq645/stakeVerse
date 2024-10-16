@@ -76,10 +76,12 @@ const WEBAPP_URL = 'https://script.google.com/macros/s/AKfycbymvjCJEg2nEADZUVJeR
         if(response == "Error"){console.error("Error when making request")}
         if(response.status === 'success' && Array.isArray(response.data)) {
             let info = response.data[1];
-            pph.textContent = Number(info[2]).toFixed(3);
+            pph.textContent = Number(info[2]).toFixed(3); 
+            localStorage.setItem("PPH",pph.textContent);
             base_rate = Number(info[1]);
             accBalance = info[7];
             loyal.textContent = info[6];
+            localStorage.setItem("LYL",loyal.textContent);
             tStake = Number(info[9]);
          } 
             else{
@@ -248,6 +250,7 @@ window.onload = function() {
         const cardLinks = document.querySelectorAll('.card a');
         const wallet = document.querySelector('.wallet-box');
         const decodedUsername = decodeURIComponent(username);
+        const navItems = document.querySelectorAll('.nav-item');
         uname = decodedUsername;
         const encodedUsername = encodeURIComponent(uname);
         var extension = `?username=${encodedUsername}`;

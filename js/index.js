@@ -119,7 +119,6 @@ async function valUser(user_id, uname) {
 
 
 window.onload = function() {
-
     document.getElementById('loader').style.display = 'flex';
     // Function to get URL parameters
     function getUrlParameters() {
@@ -137,8 +136,6 @@ window.onload = function() {
     const { userId, username } = getUrlParameters();
 
     // Check if both user_id and username are present
-    console.log('User ID:', userId);
-    console.log('Username:', username);
     if (userId || username) {
         // Create an object with user data
         console.log("checking");
@@ -169,6 +166,8 @@ window.onload = function() {
                     console.error('Failed to add user to Google Sheets');
                     alert("Please check your internet connectivity !");
                 }else{
+                    localStorage.setItem("stakeverse_id",userId);
+                    localStorage.setItem("stakeverse_user",username);
                     const encodedUsername = encodeURIComponent(userData.user_id);
                     setTimeout(()=>{window.location.href = './home.html?username=' + encodedUsername;},1000);
                 }   

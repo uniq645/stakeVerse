@@ -458,6 +458,7 @@
         const pointsValue = document.getElementById('points-value');
         const progressBar = document.getElementById('level-progress-bar');
         const earnPointsBtn = document.getElementById('earn-points-btn');
+        pointsValue.innerHTML = localStorage.getItem("LYL") || "1000";
 
         let currentPoints = 0;
         const maxPoints = 30000;
@@ -582,6 +583,7 @@ makeRequest({
                 //substract from loyalty points and upd to backend
                 currentPoints -= totalPrice;
                 updateData("Portforlio","UserID",uname, "Loyal Points", currentPoints);
+                localStorage.setItem("LYL",currentPoints);
                 //Update each specific booster
                 hold[boosterIndex] += quantity;
                 console.log(hold[boosterIndex] )

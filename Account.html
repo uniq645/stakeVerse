@@ -416,7 +416,7 @@
                 <div class="face">EASY</div>
             </div>
         </div>
-        <div class="loading-text">Loading Account info...
+        <div class="loading-text">Secure pass...
         </div>
         <div class="progress-bar">
             <div class="progress"></div>
@@ -689,12 +689,12 @@ var transactions;
                 if(index !=0){
                 const row = tableBody.insertRow();
                 row.innerHTML = `
-            <td>${transaction[5].slice(0,10)}</td>
-            <td>${transaction[1].slice(0,5)}...</td>
-            <td>$${transaction[2]}</td>
-            <td>${transaction[4]}</td>
-        `;}
-            });
+                    <td>${transaction[6]}</td>
+                    <td>${transaction[1]}</td>
+                    <td>$${transaction[4]}</td>
+                    <td>${transaction[5]}</td>
+                `;}
+                });
             } else  if(selectedValue == "withdrawal"){
                 const trans = withdrawals;
                 tableBody.innerHTML = '';
@@ -702,12 +702,12 @@ var transactions;
                 if(index !=0){
                 const row = tableBody.insertRow();
                 row.innerHTML = `
-            <td>${transaction[5].slice(0,10)}</td>
-            <td>${transaction[1].slice(0,5)}...</td>
-            <td>$${transaction[2]}</td>
-            <td>${transaction[4]}</td>
-        `;}
-            });
+                    <td>${transaction[5]}</td>
+                    <td>${transaction[1].slice(0,5)}...</td>
+                    <td>$${transaction[2]}</td>
+                    <td>${transaction[4]}</td>
+                `;}
+                });
             }
          }
 
